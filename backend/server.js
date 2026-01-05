@@ -14,7 +14,7 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors()); // Allow frontend to communicate
+// app.use(cors()); // Allow frontend to communicate
 
 app.cors({
     origin: ['http://localhost:5173', 'https://review-ai-chi.vercel.app'],
