@@ -184,32 +184,6 @@ const Dashboard = () => {
                         </div>
                     </div>
                 </Card>
-
-                <Card className="p-8">
-                    <div className="flex items-center gap-3 mb-8">
-                        <div className="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center">
-                            <Sparkles size={20} />
-                        </div>
-                        <h3 className="text-xl font-bold text-zinc-900">AI & Stats</h3>
-                    </div>
-
-                    <div className="space-y-8">
-                        <div>
-                            <label className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] block mb-2">Total Reviews Collected</label>
-                            <div className="text-4xl font-black text-zinc-900">{business.reviews?.length || 0}</div>
-                        </div>
-                        <div>
-                            <label className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] block mb-2">Configured Links</label>
-                            <div className="flex flex-wrap gap-2">
-                                {business.links?.map((link, i) => (
-                                    <span key={i} className="px-2 py-1 bg-indigo-50 text-indigo-600 rounded-md text-xs font-bold uppercase tracking-wider border border-indigo-100">
-                                        {link.type}
-                                    </span>
-                                )) || <span className="text-zinc-400 text-sm font-medium">No links configured yet</span>}
-                            </div>
-                        </div>
-                    </div>
-                </Card>
             </div>
         </div>
     );
