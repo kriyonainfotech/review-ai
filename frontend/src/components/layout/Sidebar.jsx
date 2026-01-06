@@ -62,7 +62,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             </nav>
 
             {/* User Profile Snippet */}
-            <div className="mt-auto p-4 bg-zinc-50 rounded-2xl border border-zinc-100 flex items-center gap-3">
+            {/* <div className="mt-auto p-4 bg-zinc-50 rounded-2xl border border-zinc-100 flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-primary-600 flex items-center justify-center text-white shadow-sm ring-2 ring-white">
                     <UserCircle size={24} />
                 </div>
@@ -70,7 +70,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                     <p className="text-sm font-semibold text-zinc-900 truncate">Alex Morgan</p>
                     <p className="text-xs text-zinc-500 truncate">alex@demo.com</p>
                 </div>
-            </div>
+            </div> */}
         </aside>
     );
 };
