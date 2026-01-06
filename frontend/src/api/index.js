@@ -34,11 +34,11 @@ export const api = {
     // Auth
     login: (credentials) => apiRequest('/auth/login', {
         method: 'POST',
-        body: JSON.stringify(credentials),
+        body: credentials,
     }),
     register: (userData) => apiRequest('/auth/register', {
         method: 'POST',
-        body: JSON.stringify(userData),
+        body: userData,
     }),
 
     // Business
