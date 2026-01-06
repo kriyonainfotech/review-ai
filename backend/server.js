@@ -16,10 +16,10 @@ const app = express();
 // Middleware
 // app.use(cors()); // Allow frontend to communicate
 
-app.cors({
+app.use(cors({
     origin: ['http://localhost:5173', 'https://review-ai-chi.vercel.app'],
     credentials: true,
-})
+}));
 
 app.use(express.json()); // Parse JSON bodies
 
