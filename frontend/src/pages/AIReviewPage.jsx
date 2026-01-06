@@ -94,20 +94,20 @@ const AIReviewPage = () => {
             <div className="w-full max-w-[500px] animate-fade-in-up">
 
                 {/* Branding Section */}
-                <div className="text-center mb-10">
-                    <div className="w-20 h-20 bg-white rounded-3xl shadow-xl flex items-center justify-center mx-auto mb-6 border-4 border-white group overflow-hidden">
+                <div className="text-center mb-8 sm:mb-10">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-2xl sm:rounded-3xl shadow-xl flex items-center justify-center mx-auto mb-5 sm:mb-6 border-4 border-white group overflow-hidden">
                         {business?.logoUrl ? (
                             <img src={business.logoUrl} alt={business.businessName} className="w-full h-full object-cover" />
                         ) : (
-                            <Building2 size={32} className="text-zinc-300" />
+                            <Building2 size={24} className="text-zinc-300 sm:size-[32px]" />
                         )}
                     </div>
-                    <h1 className="text-2xl font-black text-zinc-900 tracking-tight mb-2">Review {business?.businessName}</h1>
-                    <p className="text-zinc-500 font-medium text-sm">We've drafted a perfect review for you.</p>
+                    <h1 className="text-xl sm:text-2xl font-black text-zinc-900 tracking-tight mb-2">Review {business?.businessName}</h1>
+                    <p className="text-zinc-400 sm:text-zinc-500 font-medium text-xs sm:text-sm">We've drafted a perfect review for you.</p>
                 </div>
 
                 {/* Review Card */}
-                <Card className="p-8 mb-8 shadow-2xl border-zinc-100 rounded-[2.5rem] relative overflow-hidden bg-white">
+                <Card className="p-6 sm:p-8 mb-8 shadow-2xl border-zinc-100 rounded-[2rem] sm:rounded-[2.5rem] relative overflow-hidden bg-white">
                     <div className="absolute top-0 right-0 w-32 h-32 blur-3xl rounded-full -mr-16 -mt-16 opacity-10 bg-primary-500" />
 
                     <div className="relative mb-6">

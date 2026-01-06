@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import {
     LayoutDashboard,
     Building2,
@@ -8,17 +8,25 @@ import {
     Settings,
     Sparkles,
     UserCircle,
-    X
+    X,
+    LogOut
 } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose }) => {
+    const navigate = useNavigate();
     const menuItems = [
         { label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
-        { label: 'Business Profile', icon: Building2, path: '/create-business' },
-        { label: 'Review Links', icon: Link2, path: '/link-selection' },
+        // { label: 'Business Profile', icon: Building2, path: '/create-business' },
+        // { label: 'Review Links', icon: Link2, path: '/link-selection' },
         // { label: 'Analytics', icon: BarChart3, path: '/analytics' },
         // { label: 'Settings', icon: Settings, path: '/settings' }
     ];
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/login');
+        if (onClose) onClose();
+    };
 
     return (
         <aside className={`
@@ -60,6 +68,17 @@ const Sidebar = ({ isOpen, onClose }) => {
                     </NavLink>
                 ))}
             </nav>
+
+            {/* Logout Button */}
+            <div className="mt-auto pt-6 border-t border-zinc-100">
+                <button
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-all duration-200"
+                >
+                    <LogOut size={20} />
+                    Logout
+                </button>
+            </div>
 
             {/* User Profile Snippet */}
             {/* <div className="mt-auto p-4 bg-zinc-50 rounded-2xl border border-zinc-100 flex items-center gap-3">

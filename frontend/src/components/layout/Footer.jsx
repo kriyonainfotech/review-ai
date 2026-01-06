@@ -13,18 +13,6 @@ const Footer = () => {
                     </div>
                 </div>
 
-                {/* Minimal Socials */}
-                <div className="flex items-center gap-8">
-                    <a href="#" className="text-zinc-400 hover:text-primary-600 transition-colors flex items-center gap-2 text-sm font-medium">
-                        <Twitter size={16} />
-                        Twitter
-                    </a>
-                    <a href="#" className="text-zinc-400 hover:text-zinc-900 transition-colors flex items-center gap-2 text-sm font-medium">
-                        <Github size={16} />
-                        GitHub
-                    </a>
-                </div>
-
                 {/* Copyright */}
                 <p className="text-sm text-zinc-400 font-medium">
                     © {new Date().getFullYear()} ReviewLink AI. All rights reserved.
