@@ -17,7 +17,7 @@ const app = express();
 // app.use(cors()); // Allow frontend to communicate
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://review-ai-chi.vercel.app'],
+    origin: ['http://localhost:5173', 'https://review-ai-chi.vercel.app', "https://www.revlinko.com"],
     credentials: true,
 }));
 

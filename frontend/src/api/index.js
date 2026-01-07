@@ -1,8 +1,9 @@
-const BASE_URL = 'https://review-api-smoky.vercel.app/api';
-// const BASE_URL = 'http://localhost:5000/api';
+// const BASE_URL = 'https://review-api-smoky.vercel.app/api';
+const BASE_URL = 'http://localhost:5000/api';
 
 const apiRequest = async (endpoint, options = {}) => {
     const token = localStorage.getItem('token');
+    console.log(token, "token");
 
     const isFormData = options.body instanceof FormData;
 
