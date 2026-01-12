@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sparkles } from 'lucide-react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
@@ -11,6 +11,7 @@ import LinkSelection from './pages/LinkSelection';
 import PublicReviewPage from './pages/PublicReviewPage';
 import LinkInBioPage from './pages/LinkInBioPage';
 import Dashboard from './pages/Dashboard';
+import RegistrationSuccess from './pages/RegistrationSuccess';
 import AIReviewPage from './pages/AIReviewPage';
 import './index.css';
 
@@ -18,7 +19,7 @@ import './index.css';
 const MainLayout = ({ children }) => (
   <div className="min-h-screen flex flex-col bg-white">
     <Navbar />
-    <main className="flex-1 pt-16">
+    <main className="flex-1">
       {children}
     </main>
     <Footer />
@@ -39,7 +40,12 @@ const DashboardLayout = ({ children }) => {
         >
           <Menu size={24} />
         </button>
-        <span className="text-sm font-bold text-zinc-900 tracking-tight">Dashboard</span>
+        <div className="flex items-center gap-2">
+          <div className="text-primary-600">
+            <Sparkles size={24} fill="currentColor" />
+          </div>
+          <span className="text-lg font-black text-zinc-900 tracking-tight font-sans">RevLinko</span>
+        </div>
         <div className="w-10"></div> {/* Spacer for symmetry */}
       </div>
 
@@ -72,14 +78,14 @@ const ProtectedRoute = ({ children }) => {
 };
 
 // Public Route (Redirect to dashboard if logged in)
-const PublicRoute = ({ children }) => {
+const PublicRoute = ({ children, useLayout = true }) => {
   const isAuthenticated = !!localStorage.getItem('token');
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
 
-  return <MainLayout>{children}</MainLayout>;
+  return useLayout ? <MainLayout>{children}</MainLayout> : children;
 };
 
 function App() {
@@ -88,19 +94,20 @@ function App() {
       <Routes>
         {/* Public Website Routes */}
         <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
-        <Route path="/login" element={<PublicRoute><Auth isLogin={true} /></PublicRoute>} />
-        <Route path="/register" element={<PublicRoute><Auth isLogin={false} /></PublicRoute>} />
+        <Route path="/login" element={<PublicRoute useLayout={false}><Auth isLogin={true} /></PublicRoute>} />
+        <Route path="/register" element={<PublicRoute useLayout={false}><Auth isLogin={false} /></PublicRoute>} />
+        <Route path="/registration-success" element={<RegistrationSuccess />} />
 
         {/* Protected Dashboard Routes */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/create-business" element={<ProtectedRoute><CreateBusiness /></ProtectedRoute>} />
+        <Route path="/my-page" element={<ProtectedRoute><CreateBusiness /></ProtectedRoute>} />
         <Route path="/link-selection" element={<ProtectedRoute><LinkSelection /></ProtectedRoute>} />
 
         {/* Public Pages (Customer facing - no layout) */}
         <Route path="/r/:id" element={<PublicReviewPage />} />
-        <Route path="/r/:identifier/review" element={<AIReviewPage />} />
         <Route path="/:identifier/review" element={<AIReviewPage />} />
-        <Route path="/bio/:id" element={<LinkInBioPage />} />
+        <Route path="/:identifier/review" element={<AIReviewPage />} />
+        <Route path="/:id" element={<LinkInBioPage />} />
 
         {/* Catch all */}
         <Route path="*" element={<Navigate to="/" replace />} />

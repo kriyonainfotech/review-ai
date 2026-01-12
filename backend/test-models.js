@@ -1,4 +1,4 @@
-import "dotenv/config";
+require("dotenv").config();
 
 const API_KEY = process.env.GOOGLE_AI_API_KEY;
 const URL = `https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`;

@@ -1,8 +1,8 @@
-import dotenv from 'dotenv';
+const dotenv = require('dotenv');
 
 dotenv.config();
 
-export const generateReview = async (businessName, businessDescription, businessServices) => {
+const generateReview = async (businessName, businessDescription, businessServices) => {
     console.log(`AI Service called for: ${businessName}`);
     console.log(`Using OpenRouter API Key (first 5 chars): ${process.env.OPENROUTER_API_KEY?.substring(0, 5)}...`);
 
@@ -38,3 +38,6 @@ export const generateReview = async (businessName, businessDescription, business
         return "Excellent service! Highly recommended for their professional approach and quality work.";
     }
 };
+
+module.exports = { generateReview };
+

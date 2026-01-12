@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 
 const Button = ({
     children,
@@ -11,31 +12,38 @@ const Button = ({
     fullWidth = false,
     icon: Icon,
     iconPosition = 'left',
+    loading = false,
+    disabled,
     ...props
 }) => {
-    const baseStyles = "inline-flex items-center justify-center font-semibold transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none gap-2";
+    const baseStyles = "inline-flex items-center justify-center font-bold transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none gap-2";
 
     const variants = {
-        primary: "bg-primary-600 text-white hover:bg-primary-700 shadow-[0_4px_14px_0_rgba(37,99,235,0.39)]",
-        secondary: "bg-white text-zinc-900 border border-zinc-200 hover:bg-zinc-50 shadow-sm",
-        ghost: "bg-transparent text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900",
+        primary: "bg-primary-600 text-white hover:bg-primary-700 shadow-lg shadow-primary-600/20",
+        secondary: "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50",
+        ghost: "bg-transparent text-slate-600 hover:bg-slate-100",
         danger: "bg-red-50 text-red-600 hover:bg-red-100 border border-red-100",
         outline: "bg-transparent text-primary-600 border border-primary-600 hover:bg-primary-50"
     };
 
     const sizes = {
-        sm: "px-4 py-2 text-sm rounded-lg",
-        md: "px-6 py-3 text-[15px] rounded-xl",
-        lg: "px-8 py-4 text-base rounded-2xl"
+        sm: "px-3 h-9 text-xs rounded-lg",
+        md: "px-5 h-11 text-sm rounded-xl",
+        lg: "px-7 h-12 text-[15px] rounded-xl",
+        icon: "size-10 rounded-xl"
     };
 
     const combinedClasses = `${baseStyles} ${variants[variant]} ${sizes[size]} ${fullWidth ? 'w-full' : ''} ${className}`;
 
     const content = (
         <>
-            {Icon && iconPosition === 'left' && <Icon size={size === 'sm' ? 16 : 18} />}
+            {loading ? (
+                <Loader2 size={size === 'sm' ? 16 : 18} className="animate-spin" />
+            ) : (
+                Icon && iconPosition === 'left' && <Icon size={size === 'sm' ? 16 : 18} />
+            )}
             {children}
-            {Icon && iconPosition === 'right' && <Icon size={size === 'sm' ? 16 : 18} />}
+            {!loading && Icon && iconPosition === 'right' && <Icon size={size === 'sm' ? 16 : 18} />}
         </>
     );
 
@@ -51,12 +59,14 @@ const Button = ({
         <button
             onClick={onClick}
             className={combinedClasses}
+            disabled={disabled || loading}
             {...props}
         >
             {content}
         </button>
     );
 };
+
 
 export default Button;
 

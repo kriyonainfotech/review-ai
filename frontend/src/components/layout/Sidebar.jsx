@@ -16,9 +16,8 @@ const Sidebar = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
     const menuItems = [
         { label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
-        // { label: 'Business Profile', icon: Building2, path: '/create-business' },
-        // { label: 'Review Links', icon: Link2, path: '/link-selection' },
-        // { label: 'Analytics', icon: BarChart3, path: '/analytics' },
+        { label: 'My Page', icon: Building2, path: '/my-page' },
+        // { label: 'Reviews', icon: Sparkles, path: '/reviews' },
         // { label: 'Settings', icon: Settings, path: '/settings' }
     ];
 
@@ -39,7 +38,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                     <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white group-hover:bg-primary-700 transition-colors">
                         <Sparkles size={18} fill="currentColor" />
                     </div>
-                    <span className="text-lg font-bold tracking-tight text-zinc-900 leading-none">ReviewLink</span>
+                    <span className="text-lg font-bold tracking-tight text-zinc-900 leading-none">RevLinko</span>
                 </Link>
                 <button
                     onClick={onClose}

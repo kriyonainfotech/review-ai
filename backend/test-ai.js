@@ -1,4 +1,4 @@
-import { generateReview } from './utils/aiService.js';
+const { generateReview } = require('./utils/aiService');
 
 async function test() {
     console.log("Starting AI Review Generation Test...");

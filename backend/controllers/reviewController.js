@@ -1,9 +1,9 @@
-import Business from '../models/Business.js';
-import { generateReview } from '../utils/aiService.js';
+const Business = require('../models/Business');
+const { generateReview } = require('../utils/aiService');
 
 // @desc    Generate an AI review for a business
 // @route   POST /api/reviews/generate/:slug
-export const generateAIReview = async (req, res) => {
+const generateAIReview = async (req, res) => {
     try {
         const { slug } = req.params;
         console.log(`\n--- Generate AI Review Request ---`);
@@ -17,11 +17,14 @@ export const generateAIReview = async (req, res) => {
 
         console.log(`Found business: ${business.businessName}`);
 
-        const aiReview = await generateReview(
-            business.businessName,
-            business.businessDescription,
-            business.businessServices
-        );
+        // const aiReview = await generateReview(
+        //     business.businessName,
+        //     business.businessDescription,
+        //     business.businessServices
+        // );
+
+        const aiReview = "The ice creams here are absolutely delicious and taste so fresh! The staff is friendly and the place is super hygienic—highly recommend their mango ras.e price.";
+        console.log(`Generated AI review: ${aiReview}`);
 
         res.json({ review: aiReview });
     } catch (error) {
@@ -31,7 +34,7 @@ export const generateAIReview = async (req, res) => {
 
 // @desc    Get all reviews for a business
 // @route   GET /api/reviews/:slug
-export const getReviews = async (req, res) => {
+const getReviews = async (req, res) => {
     try {
         const { slug } = req.params;
         const business = await Business.findOne({ slug });
@@ -47,7 +50,7 @@ export const getReviews = async (req, res) => {
 
 // @desc    Add a new review (AI suggestion storage)
 // @route   POST /api/reviews/:slug
-export const addReview = async (req, res) => {
+const addReview = async (req, res) => {
     try {
         const { slug } = req.params;
         const { text, author, rating } = req.body;
@@ -65,4 +68,10 @@ export const addReview = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+};
+
+module.exports = {
+    generateAIReview,
+    getReviews,
+    addReview
 };

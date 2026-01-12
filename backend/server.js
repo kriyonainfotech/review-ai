@@ -1,10 +1,10 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import connectDB from './config/db.js';
-import authRoutes from './routes/authRoutes.js';
-import businessRoutes from './routes/businessRoutes.js';
-import reviewRoutes from './routes/reviewRoutes.js';
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const connectDB = require('./config/db');
+const authRoutes = require('./routes/authRoutes');
+const businessRoutes = require('./routes/businessRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
 
 dotenv.config();
 
@@ -24,9 +24,11 @@ app.use(cors({
 app.use(express.json()); // Parse JSON bodies
 
 // Routes
+console.log("Mounting routes...");
 app.use('/api/auth', authRoutes);
 app.use('/api/business', businessRoutes);
 app.use('/api/reviews', reviewRoutes);
+console.log("Routes mounted.");
 
 const PORT = process.env.PORT || 5000;
 
@@ -34,4 +36,4 @@ if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
 
-export default app;
+module.exports = app;

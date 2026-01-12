@@ -6,7 +6,7 @@ import Input from '../components/ui/Input';
 import {
     Building2,
     ChevronRight,
-    Loader2, Sparkles
+    Loader2, Sparkles, X, UserPen, Check // Added icons
 } from 'lucide-react';
 import { api } from '../api';
 
@@ -27,33 +27,39 @@ const CreateBusiness = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [isEdit, setIsEdit] = useState(false);
+    const [isViewOnly, setIsViewOnly] = useState(false);
     const [businessId_db, setBusinessId_db] = useState(null);
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('edit') === 'true') {
-            setIsEdit(true);
-            fetchBusinessData();
-        }
+        fetchBusinessData();
     }, []);
 
     const fetchBusinessData = async () => {
         try {
+            setLoading(true);
             const data = await api.getMyBusiness();
-            setFormData({
-                businessId: data.businessId || '',
-                businessName: data.businessName || '',
-                googleReviewLink: data.googleReviewLink || '',
-                slug: data.slug || '',
-                businessDescription: data.businessDescription || '',
-                businessServices: data.businessServices || '',
-                primaryColor: data.primaryColor || '#3b82f6',
-                secondaryColor: data.secondaryColor || '#ffffff'
-            });
-            setLogoPreview(data.logoUrl);
-            setBusinessId_db(data._id);
+            if (data) {
+                setFormData({
+                    businessId: data.businessId || '',
+                    businessName: data.businessName || '',
+                    googleReviewLink: data.googleReviewLink || '',
+                    slug: data.slug || '',
+                    businessDescription: data.businessDescription || '',
+                    businessServices: data.businessServices || '',
+                    primaryColor: data.primaryColor || '#3b82f6',
+                    secondaryColor: data.secondaryColor || '#ffffff'
+                });
+                setLogoPreview(data.logoUrl);
+                setBusinessId_db(data._id);
+                setIsEdit(true);
+                setIsViewOnly(true);
+            }
         } catch (err) {
-            setError('Failed to fetch business data for editing.');
+            if (err.message !== 'Business not found') {
+                setError('Failed to fetch business data.');
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -71,6 +77,7 @@ const CreateBusiness = () => {
     };
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
         e.preventDefault();
         setLoading(true);
         setError('');
@@ -102,183 +109,268 @@ const CreateBusiness = () => {
     };
 
     return (
-        <div className="p-8 lg:p-12 max-w-4xl mx-auto animate-fade-in-up">
-            <header className="mb-10">
-                <div className="flex items-center gap-2 text-sm font-bold text-zinc-400 uppercase tracking-widest mb-4">
-                    <span>Dashboard</span>
-                    <ChevronRight size={14} />
-                    <span className="text-primary-600">{isEdit ? 'Edit Profile' : 'Create Profile'}</span>
-                </div>
-                <h1 className="text-4xl font-extrabold text-zinc-900 tracking-tight mb-3">
-                    {isEdit ? 'Update your Business Profile' : 'Create your Business Profile'}
-                </h1>
-                <p className="text-zinc-500 font-medium text-lg">Let's set up your AI-powered review page to start gathering feedback.</p>
+        <>
+            {/* --- Main Content --- */}
+            <div className="p-4 md:p-6 pb-28 md:pb-6 animate-fade-in-up"> {/* Added pb-28 for mobile scroll space */}
+                <header className="mb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <div className="flex items-center gap-2 text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-3">
+                            <span>Dashboard</span>
+                            <ChevronRight size={10} />
+                            <span className="text-primary-600">
+                                {isViewOnly ? 'View Page' : (isEdit ? 'Edit Page' : 'Create Page')}
+                            </span>
+                        </div>
+                        <h1 className="text-xl font-extrabold text-zinc-900 tracking-tight mb-1">
+                            {isViewOnly ? 'Business Page' : (isEdit ? 'Update Business Page' : 'Create Business Page')}
+                        </h1>
+                        <p className="text-zinc-500 font-medium text-sm">
+                            {isViewOnly ? 'Your business identity and branding.' : 'Set up your AI-powered review page.'}
+                        </p>
+                    </div>
 
-                <div className="flex gap-2 mt-8">
-                    <div className="h-1.5 flex-1 bg-primary-600 rounded-full shadow-sm shadow-primary-500/20"></div>
-                    <div className="h-1.5 flex-1 bg-primary-600 rounded-full shadow-sm shadow-primary-500/20"></div>
-                    <div className="h-1.5 flex-1 bg-primary-600 rounded-full shadow-sm shadow-primary-500/20"></div>
-                </div>
-            </header>
+                    {/* DESKTOP Edit Button */}
+                    {isViewOnly && (
+                        <div className="hidden md:block">
+                            <Button
+                                onClick={() => setIsViewOnly(false)}
+                                className="h-10 rounded-xl bg-zinc-900 text-white hover:bg-zinc-800 flex items-center gap-2 px-4"
+                            >
+                                <UserPen size={16} />
+                                <span className="text-xs">Edit Page</span>
+                            </Button>
+                        </div>
+                    )}
+                </header>
 
-            {error && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-sm font-bold rounded-xl flex items-center gap-2">
-                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                    {error}
-                </div>
-            )}
+                {error && (
+                    <div className="mb-4 p-3 bg-red-50 border border-red-100 text-red-600 text-[13px] font-bold rounded-xl flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
+                        {error}
+                    </div>
+                )}
 
-            <Card className="p-10 border-zinc-100 shadow-xl">
-                <form onSubmit={handleSubmit} className="space-y-10" encType="multipart/form-data">
-                    <section>
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center">
-                                <Building2 size={22} />
+                <Card className="p-6 md:p-8 border-zinc-100 shadow-lg">
+                    {/* IMPORTANT: Added ID to form to connect external buttons */}
+                    <form id="settings-form" onSubmit={handleSubmit} className="space-y-8" encType="multipart/form-data">
+
+                        {/* ... (Keep ALL your existing Inputs/Sections exactly the same) ... */}
+                        <section>
+                            <div className="flex items-center gap-2 mb-6">
+                                <div className="w-8 h-8 bg-primary-50 text-primary-600 rounded-lg flex items-center justify-center">
+                                    <Building2 size={18} />
+                                </div>
+                                <h2 className="text-lg font-bold text-zinc-900">Business Identity</h2>
                             </div>
-                            <h2 className="text-xl font-bold text-zinc-900">Business Identity</h2>
-                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <Input
-                                label="Business ID"
-                                id="businessId"
-                                placeholder="unique-business-id"
-                                required
-                                value={formData.businessId}
-                                onChange={handleChange}
-                                className="mb-0"
-                            />
-                            <Input
-                                label="Business Name"
-                                id="businessName"
-                                placeholder="e.g. Acme Coffee Roasters"
-                                required
-                                value={formData.businessName}
-                                onChange={handleChange}
-                                className="mb-0"
-                            />
-                        </div>
-
-                        <div className="space-y-6">
-                            <div>
-                                <label htmlFor="businessDescription" className="block text-sm font-bold text-zinc-700 mb-2 ml-1">About the Business</label>
-                                <textarea
-                                    id="businessDescription"
-                                    placeholder="e.g., We are a family-owned Italian restaurant..."
-                                    value={formData.businessDescription}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <Input
+                                    label="Username"
+                                    id="businessId"
+                                    placeholder="unique-id"
+                                    required
+                                    value={formData.businessId}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-3 rounded-2xl border border-zinc-200 bg-white text-zinc-900 text-[15px] transition-all duration-200 outline-hidden focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 min-h-[100px] resize-none"
+                                    readOnly={isViewOnly}
+                                    className={`mb-0 ${isViewOnly ? 'opacity-75 cursor-default' : ''}`}
+                                />
+                                <Input
+                                    label="Business Name"
+                                    id="businessName"
+                                    placeholder="e.g. Acme Coffee"
+                                    required
+                                    value={formData.businessName}
+                                    onChange={handleChange}
+                                    readOnly={isViewOnly}
+                                    className={`mb-0 ${isViewOnly ? 'opacity-75 cursor-default' : ''}`}
                                 />
                             </div>
 
-                            <Input
-                                label="Services (Comma separated)"
-                                id="businessServices"
-                                placeholder="e.g., Pizza, Pasta, Catering, Delivery"
-                                value={formData.businessServices}
-                                onChange={handleChange}
-                                className="mb-0"
-                            />
-                        </div>
-                    </section>
-
-                    <section className="pt-10 border-t border-zinc-100">
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center">
-                                <Sparkles size={22} />
-                            </div>
-                            <h2 className="text-xl font-bold text-zinc-900">Branding & Links</h2>
-                        </div>
-
-                        <div className="space-y-10">
-                            <div>
-                                <label className="block text-sm font-bold text-zinc-700 mb-4 ml-1">Business Logo</label>
-                                <div className="flex items-center gap-6">
-                                    <div className="w-24 h-24 bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-3xl flex items-center justify-center overflow-hidden shrink-0">
-                                        {logoPreview ? (
-                                            <img src={logoPreview} alt="Preview" className="w-full h-full object-cover" />
-                                        ) : (
-                                            <Building2 size={32} className="text-zinc-300" />
-                                        )}
-                                    </div>
-                                    <div className="flex-1">
-                                        <input
-                                            type="file"
-                                            id="logo"
-                                            accept="image/*"
-                                            onChange={handleFileChange}
-                                            className="hidden"
-                                        />
-                                        <label
-                                            htmlFor="logo"
-                                            className="inline-flex items-center px-4 py-2.5 bg-white border border-zinc-200 rounded-xl text-sm font-bold text-zinc-700 cursor-pointer hover:bg-zinc-50 transition-colors shadow-sm"
-                                        >
-                                            Change Logo
-                                        </label>
-                                        <p className="text-zinc-400 text-xs mt-2 font-medium italic">PNG, JPG or WebP. Max 5MB.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <Input
-                                label="Google Review Link"
-                                id="googleReviewLink"
-                                placeholder="https://g.page/r/..."
-                                required
-                                value={formData.googleReviewLink}
-                                onChange={handleChange}
-                                className="mb-0"
-                            />
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-bold text-zinc-700 mb-3 ml-1">Primary Color (Buttons)</label>
+                                    <label htmlFor="businessDescription" className="block text-xs font-bold text-zinc-700 mb-1.5 ml-1">About the Business</label>
+                                    <textarea
+                                        id="businessDescription"
+                                        placeholder="e.g., We are a family-owned Italian restaurant..."
+                                        rows={8}
+                                        value={formData.businessDescription}
+                                        onChange={handleChange}
+                                        readOnly={isViewOnly}
+                                        className={`w-full px-3 py-2.5 rounded-xl border border-zinc-200 bg-white text-zinc-900 text-[14px] transition-all duration-200 outline-hidden focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 min-h-[80px] resize-none ${isViewOnly ? 'opacity-75 cursor-default' : ''}`}
+                                    />
+                                </div>
+
+                                <Input
+                                    label="Services (Comma separated)"
+                                    id="businessServices"
+                                    placeholder="e.g., Pizza, Pasta, Catering"
+                                    value={formData.businessServices}
+                                    onChange={handleChange}
+                                    readOnly={isViewOnly}
+                                    className={`mb-0 ${isViewOnly ? 'opacity-75 cursor-default' : ''}`}
+                                />
+                            </div>
+                        </section>
+
+                        <section className="pt-8 border-t border-zinc-100">
+                            <div className="flex items-center gap-2 mb-6">
+                                <div className="w-8 h-8 bg-primary-50 text-primary-600 rounded-lg flex items-center justify-center">
+                                    <Sparkles size={18} />
+                                </div>
+                                <h2 className="text-lg font-bold text-zinc-900">Branding & Links</h2>
+                            </div>
+
+                            <div className="space-y-8">
+                                <div>
+                                    <label className="block text-xs font-bold text-zinc-700 mb-3 ml-1">Business Logo</label>
                                     <div className="flex items-center gap-4">
-                                        <input
-                                            type="color"
-                                            id="primaryColor"
-                                            value={formData.primaryColor}
-                                            onChange={handleChange}
-                                            className="w-14 h-14 rounded-xl cursor-pointer border-none p-0 overflow-hidden"
-                                        />
-                                        <span className="text-sm font-mono font-bold text-zinc-500 uppercase">{formData.primaryColor}</span>
+                                        <div className="w-16 h-16 bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-2xl flex items-center justify-center overflow-hidden shrink-0">
+                                            {logoPreview ? (
+                                                <img src={logoPreview} alt="Preview" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <Building2 size={24} className="text-zinc-300" />
+                                            )}
+                                        </div>
+                                        <div className="flex-1">
+                                            <input
+                                                type="file"
+                                                id="logo"
+                                                accept="image/*"
+                                                onChange={handleFileChange}
+                                                disabled={isViewOnly}
+                                                className="hidden"
+                                            />
+                                            <label
+                                                htmlFor="logo"
+                                                className={`inline-flex items-center px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-bold text-zinc-700 cursor-pointer hover:bg-zinc-50 transition-colors shadow-sm ${isViewOnly ? 'pointer-events-none opacity-50' : ''}`}
+                                            >
+                                                Change Logo
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-zinc-700 mb-3 ml-1">Secondary Color (Text)</label>
-                                    <div className="flex items-center gap-4">
-                                        <input
-                                            type="color"
-                                            id="secondaryColor"
-                                            value={formData.secondaryColor}
-                                            onChange={handleChange}
-                                            className="w-14 h-14 rounded-xl cursor-pointer border-none p-0 overflow-hidden"
-                                        />
-                                        <span className="text-sm font-mono font-bold text-zinc-500 uppercase">{formData.secondaryColor}</span>
+
+                                <Input
+                                    label="Google Review Link"
+                                    id="googleReviewLink"
+                                    placeholder="https://g.page/r/..."
+                                    required
+                                    value={formData.googleReviewLink}
+                                    onChange={handleChange}
+                                    readOnly={isViewOnly}
+                                    className={`mb-0 ${isViewOnly ? 'opacity-75 cursor-default' : ''}`}
+                                />
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label className="block text-xs font-bold text-zinc-700 mb-2 ml-1">Primary Color</label>
+                                        <div className="flex items-center gap-3">
+                                            <input
+                                                type="color"
+                                                id="primaryColor"
+                                                value={formData.primaryColor}
+                                                onChange={handleChange}
+                                                disabled={isViewOnly}
+                                                className={`w-10 h-10 rounded-lg cursor-pointer border-none p-0 overflow-hidden shadow-sm ${isViewOnly ? 'pointer-events-none' : ''}`}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-zinc-700 mb-2 ml-1">Secondary Color</label>
+                                        <div className="flex items-center gap-3">
+                                            <input
+                                                type="color"
+                                                id="secondaryColor"
+                                                value={formData.secondaryColor}
+                                                onChange={handleChange}
+                                                disabled={isViewOnly}
+                                                className={`w-10 h-10 rounded-lg cursor-pointer border-none p-0 overflow-hidden shadow-sm ${isViewOnly ? 'pointer-events-none' : ''}`}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
+                        </section>
 
-                    <div className="flex justify-end pt-6">
-                        <Button
-                            size="lg"
-                            type="submit"
-                            className="px-12 h-14 shadow-xl shadow-primary-500/10"
-                            disabled={loading}
-                        >
-                            {loading ? (
-                                <>
-                                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                    {isEdit ? 'Updating...' : 'Creating...'}
-                                </>
-                            ) : (isEdit ? 'Update Profile' : 'Create Profile')}
-                        </Button>
-                    </div>
-                </form>
-            </Card>
-        </div>
+                        {/* DESKTOP ONLY Buttons (Hidden on mobile) */}
+                        {!isViewOnly && (
+                            <div className="hidden md:flex justify-end pt-4 gap-3">
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => setIsViewOnly(true)}
+                                    size="md"
+                                    className="px-8 h-12 text-sm"
+                                    disabled={loading}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    size="md"
+                                    type="submit"
+                                    className="px-8 h-12 shadow-lg shadow-primary-500/10 text-sm"
+                                    disabled={loading}
+                                >
+                                    {loading ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Saving...
+                                        </>
+                                    ) : (isEdit ? 'Save Changes' : 'Create Profile')}
+                                </Button>
+                            </div>
+                        )}
+                    </form>
+                </Card>
+            </div>
+
+            {/* --- 1. MOBILE EDIT BUTTON (Circular FAB) --- */}
+            {isViewOnly && (
+                <div className="fixed bottom-6 right-6 z-50 md:hidden animate-in fade-in zoom-in duration-300">
+                    <Button
+                        size="icon"
+                        onClick={() => setIsViewOnly(false)}
+                        className="h-12 px-5 rounded-full bg-zinc-900 text-white shadow-2xl shadow-zinc-900/40 hover:scale-105 transition-transform flex items-center gap-2"
+                    >
+                        <UserPen size={20} />
+                        <span className="font-bold text-sm">Edit</span>
+                    </Button>
+                </div>
+            )}
+
+            {/* --- 2. MOBILE ACTION BAR (Cancel / Save) --- */}
+            {!isViewOnly && (
+                <div className="fixed bottom-0 left-0 right-0 px-4 py-4 backdrop-blur-md border-t border-zinc-200 z-50 md:hidden flex items-center gap-3 animate-slide-up">
+                    <Button
+                        size="icon"
+                        variant="secondary"
+                        onClick={() => setIsViewOnly(true)}
+                        className="flex-1 h-12 rounded-pill bg-zinc-100 text-zinc-900 font-bold shadow-xs border border-zinc-200"
+                        disabled={loading}
+                    >
+                        <X size={18} className="mr-2" />
+                        Cancel
+                    </Button>
+
+                    <Button
+                        size="icon"
+                        type="submit"
+                        form="settings-form"
+                        className="flex-1 h-12 rounded-pill shadow-xl shadow-primary-500/20 font-bold"
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <Loader2 className="animate-spin" />
+                        ) : (
+                            <>
+                                <Check size={18} className="mr-2" />
+                                Save
+                            </>
+                        )}
+                    </Button>
+                </div>
+            )}
+
+        </>
     );
 };
 

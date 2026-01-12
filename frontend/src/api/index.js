@@ -23,7 +23,16 @@ const apiRequest = async (endpoint, options = {}) => {
     };
 
     const response = await fetch(`${BASE_URL}${endpoint}`, config);
-    const data = await response.json();
+
+    // Better handling for non-JSON responses (like 404 HTML pages)
+    const contentType = response.headers.get("content-type");
+    let data;
+    if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+    } else {
+        const text = await response.text();
+        data = { message: text || response.statusText };
+    }
 
     if (!response.ok) {
         throw new Error(data.message || 'Something went wrong');
@@ -42,6 +51,14 @@ export const api = {
         method: 'POST',
         body: userData,
     }),
+    sendOTP: (email) => apiRequest('/auth/send-otp', {
+        method: 'POST',
+        body: { email },
+    }),
+    verifyOTP: (email, otp) => apiRequest('/auth/verify-otp', {
+        method: 'POST',
+        body: { email, otp },
+    }),
 
     // Business
     createBusiness: (businessData) => apiRequest('/business/create', {
@@ -59,4 +76,5 @@ export const api = {
     generateAIReview: (slug) => apiRequest(`/reviews/generate/${slug}`, {
         method: 'POST',
     }),
+    checkSlug: (slug) => apiRequest(`/business/check-slug/${slug}`),
 };

@@ -1,9 +1,29 @@
-import Business from '../models/Business.js';
+const Business = require('../models/Business');
+
+const checkSlugAvailability = async (req, res) => {
+    try {
+        console.log("[checkSlugAvailability] req.params: ", req.params);
+        const { slug } = req.params;
+        console.log("[checkSlugAvailability] slug: ", slug);
+        const business = await Business.findOne({ slug });
+        console.log("[checkSlugAvailability] business: ", business);
+        if (business) {
+            console.log("[checkSlugAvailability] business found");
+            return res.json({ available: false });
+        }
+        console.log("[checkSlugAvailability] business not found");
+        res.json({ available: true });
+    } catch (error) {
+        console.log("[checkSlugAvailability] error: ", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
 
 // @desc    Create new business profile
 // @route   POST /api/business
 // @access  Private
-export const createBusiness = async (req, res) => {
+const createBusiness = async (req, res) => {
     const {
         googleReviewLink,
         slug,
@@ -15,6 +35,8 @@ export const createBusiness = async (req, res) => {
         secondaryColor
     } = req.body;
 
+    console.log("[createBusiness] req.body: ", req.body);
+    console.log("[createBusiness] req.file: ", req.file);
     try {
         // Check if slug is taken
         const slugExists = await Business.findOne({ slug });
@@ -46,9 +68,11 @@ export const createBusiness = async (req, res) => {
             links: [], // Initialize empty
             reviews: []
         });
+
+        console.log("[createBusiness] business: ", business);
         res.status(201).json(business);
     } catch (error) {
-        console.error(error);
+        console.log("[createBusiness] error: ", error);
         res.status(500).json({ message: 'Server Error' });
     }
 };
@@ -56,7 +80,7 @@ export const createBusiness = async (req, res) => {
 // @desc    Get public business page data (by slug or businessId)
 // @route   GET /api/business/:identifier
 // @access  Public
-export const getBusinessByIdentifier = async (req, res) => {
+const getBusinessByIdentifier = async (req, res) => {
     try {
         const { identifier } = req.params;
         const business = await Business.findOne({
@@ -76,7 +100,7 @@ export const getBusinessByIdentifier = async (req, res) => {
     }
 };
 
-export const updateBusiness = async (req, res) => {
+const updateBusiness = async (req, res) => {
     try {
         const business = await Business.findById(req.params.id);
         if (!business) return res.status(404).json({ message: 'Business not found' });
@@ -105,11 +129,11 @@ export const updateBusiness = async (req, res) => {
     }
 };
 
-export const getBusinessByUser = async (req, res) => {
+const getBusinessByUser = async (req, res) => {
     try {
-        console.log(req.user.id);
+        console.log("[getBusinessByUser] req.user.id: ", req.user.id);
         const business = await Business.findOne({ user: req.user.id });
-        console.log(business);
+        console.log("[getBusinessByUser] business: ", business);
         if (business) {
             res.json(business);
         } else {
@@ -118,4 +142,12 @@ export const getBusinessByUser = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Server Error' });
     }
+};
+
+module.exports = {
+    checkSlugAvailability,
+    createBusiness,
+    getBusinessByIdentifier,
+    updateBusiness,
+    getBusinessByUser
 };
