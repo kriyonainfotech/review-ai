@@ -17,13 +17,13 @@ const generateAIReview = async (req, res) => {
 
         console.log(`Found business: ${business.businessName}`);
 
-        // const aiReview = await generateReview(
-        //     business.businessName,
-        //     business.businessDescription,
-        //     business.businessServices
-        // );
+        const aiReview = await generateReview(
+            business.businessName,
+            business.businessDescription,
+            business.businessServices
+        );
 
-        const aiReview = "The ice creams here are absolutely delicious and taste so fresh! The staff is friendly and the place is super hygienic—highly recommend their mango ras.e price.";
+        // const aiReview = "The ice creams here are absolutely delicious and taste so fresh! The staff is friendly and the place is super hygienic—highly recommend their mango ras.e price.";
         console.log(`Generated AI review: ${aiReview}`);
 
         res.json({ review: aiReview });
