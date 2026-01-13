@@ -1,45 +1,44 @@
+import axios from 'axios';
+
 const BASE_URL = 'https://review-api-smoky.vercel.app/api';
 // const BASE_URL = 'http://localhost:5000/api';
 
+const axiosInstance = axios.create({
+    baseURL: BASE_URL,
+});
+
+axiosInstance.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
 const apiRequest = async (endpoint, options = {}) => {
-    const token = localStorage.getItem('token');
-    console.log(token, "token");
+    try {
+        const { method = 'GET', body, headers = {} } = options;
 
-    const isFormData = options.body instanceof FormData;
-
-    const headers = {
-        ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
-        ...options.headers,
-    };
-
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
+        const response = await axiosInstance({
+            url: endpoint,
+            method,
+            data: body,
+            headers,
+        });
+        console.log(response, "response----------------")
+        return response.data;
+    } catch (error) {
+        console.log(error, "error----------------")
+        const message = error.response?.data?.message || error.message || 'Something went wrong';
+        throw new Error(message);
     }
-
-    const config = {
-        ...options,
-        headers,
-        body: isFormData ? options.body : (options.body ? JSON.stringify(options.body) : undefined)
-    };
-
-    const response = await fetch(`${BASE_URL}${endpoint}`, config);
-
-    // Better handling for non-JSON responses (like 404 HTML pages)
-    const contentType = response.headers.get("content-type");
-    let data;
-    if (contentType && contentType.includes("application/json")) {
-        data = await response.json();
-    } else {
-        const text = await response.text();
-        data = { message: text || response.statusText };
-    }
-
-    if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
-    }
-
-    return data;
 };
+
 
 export const api = {
     // Auth

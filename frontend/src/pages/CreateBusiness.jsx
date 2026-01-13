@@ -9,8 +9,10 @@ import {
     Loader2, Sparkles, X, UserPen, Check // Added icons
 } from 'lucide-react';
 import { api } from '../api';
+import { compressImage } from '../utils/imageCompression';
 
 const CreateBusiness = () => {
+
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         businessId: '',
@@ -90,8 +92,10 @@ const CreateBusiness = () => {
                 data.append(key, formData[key]);
             });
             data.set('slug', slug);
+
             if (logo) {
-                data.append('logo', logo);
+                const compressedLogo = await compressImage(logo);
+                data.append('logo', compressedLogo);
             }
 
             if (isEdit && businessId_db) {
@@ -99,6 +103,7 @@ const CreateBusiness = () => {
             } else {
                 await api.createBusiness(data);
             }
+
 
             navigate('/dashboard');
         } catch (err) {
@@ -163,11 +168,40 @@ const CreateBusiness = () => {
                                 <h2 className="text-lg font-bold text-zinc-900">Business Identity</h2>
                             </div>
 
+                            <div className="mb-8">
+                                <label className="block text-xs font-bold text-zinc-700 mb-3 ml-1">Business Logo</label>
+                                <div className="flex items-center gap-4">
+                                    <div className="w-16 h-16 md:w-24 md:h-24 bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-2xl flex items-center justify-center overflow-hidden shrink-0">
+                                        {logoPreview ? (
+                                            <img src={logoPreview} alt="Preview" className="w-full h-full object-contain" />
+                                        ) : (
+                                            <Building2 size={24} className="text-zinc-300" />
+                                        )}
+                                    </div>
+                                    <div className="flex-1">
+                                        <input
+                                            type="file"
+                                            id="logo"
+                                            accept="image/*"
+                                            onChange={handleFileChange}
+                                            disabled={isViewOnly}
+                                            className="hidden"
+                                        />
+                                        <label
+                                            htmlFor="logo"
+                                            className={`inline-flex items-center px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-bold text-zinc-700 cursor-pointer hover:bg-zinc-50 transition-colors shadow-sm ${isViewOnly ? 'pointer-events-none opacity-50' : ''}`}
+                                        >
+                                            Change Logo
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                 <Input
                                     label="Username"
                                     id="businessId"
-                                    placeholder="unique-id"
+                                    placeholder="revlinko.com/username"
                                     required
                                     value={formData.businessId}
                                     onChange={handleChange}
@@ -192,7 +226,7 @@ const CreateBusiness = () => {
                                     <textarea
                                         id="businessDescription"
                                         placeholder="e.g., We are a family-owned Italian restaurant..."
-                                        rows={8}
+                                        rows={4}
                                         value={formData.businessDescription}
                                         onChange={handleChange}
                                         readOnly={isViewOnly}
@@ -221,35 +255,6 @@ const CreateBusiness = () => {
                             </div>
 
                             <div className="space-y-8">
-                                <div>
-                                    <label className="block text-xs font-bold text-zinc-700 mb-3 ml-1">Business Logo</label>
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-16 h-16 bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-2xl flex items-center justify-center overflow-hidden shrink-0">
-                                            {logoPreview ? (
-                                                <img src={logoPreview} alt="Preview" className="w-full h-full object-cover" />
-                                            ) : (
-                                                <Building2 size={24} className="text-zinc-300" />
-                                            )}
-                                        </div>
-                                        <div className="flex-1">
-                                            <input
-                                                type="file"
-                                                id="logo"
-                                                accept="image/*"
-                                                onChange={handleFileChange}
-                                                disabled={isViewOnly}
-                                                className="hidden"
-                                            />
-                                            <label
-                                                htmlFor="logo"
-                                                className={`inline-flex items-center px-3 py-2 bg-white border border-zinc-200 rounded-lg text-xs font-bold text-zinc-700 cursor-pointer hover:bg-zinc-50 transition-colors shadow-sm ${isViewOnly ? 'pointer-events-none opacity-50' : ''}`}
-                                            >
-                                                Change Logo
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <Input
                                     label="Google Review Link"
                                     id="googleReviewLink"
@@ -325,14 +330,32 @@ const CreateBusiness = () => {
 
             {/* --- 1. MOBILE EDIT BUTTON (Circular FAB) --- */}
             {isViewOnly && (
-                <div className="fixed bottom-6 right-6 z-50 md:hidden animate-in fade-in zoom-in duration-300">
+                <div
+                    className="
+    fixed 
+    bottom-4 right-4 
+    sm:bottom-5 sm:right-5
+    z-50 
+    md:hidden
+    animate-in fade-in zoom-in duration-300
+    safe-bottom safe-right
+  "
+                >
                     <Button
                         size="icon"
                         onClick={() => setIsViewOnly(false)}
-                        className="h-12 px-5 rounded-full bg-zinc-900 text-white shadow-2xl shadow-zinc-900/40 hover:scale-105 transition-transform flex items-center gap-2"
+                        className="
+                        h-11 w-11
+                        sm:h-12 sm:w-12
+                        rounded-full
+                        bg-zinc-900 text-white
+                        shadow-2xl shadow-zinc-900/40
+                        transition-all
+                        hover:scale-105 active:scale-95
+                        flex items-center justify-center
+                        "
                     >
-                        <UserPen size={20} />
-                        <span className="font-bold text-sm">Edit</span>
+                        <UserPen className="h-5 w-5 sm:h-6 sm:w-6" />
                     </Button>
                 </div>
             )}

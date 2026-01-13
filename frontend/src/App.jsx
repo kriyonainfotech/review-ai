@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { Menu, X, Sparkles } from 'lucide-react';
+import { Menu, Sparkles } from 'lucide-react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
 import Footer from './components/layout/Footer';
 import LandingPage from './pages/LandingPage';
-import Auth from './pages/Auth';
+
+// UPDATED IMPORTS
+import Login from './pages/Login';
+import Register from './pages/Register';
+
 import CreateBusiness from './pages/CreateBusiness';
 import LinkSelection from './pages/LinkSelection';
 import PublicReviewPage from './pages/PublicReviewPage';
@@ -46,7 +50,7 @@ const DashboardLayout = ({ children }) => {
           </div>
           <span className="text-lg font-black text-zinc-900 tracking-tight font-sans">RevLinko</span>
         </div>
-        <div className="w-10"></div> {/* Spacer for symmetry */}
+        <div className="w-10"></div>
       </div>
 
       {/* Mobile Overlay */}
@@ -69,22 +73,14 @@ const DashboardLayout = ({ children }) => {
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = !!localStorage.getItem('token');
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
   return <DashboardLayout>{children}</DashboardLayout>;
 };
 
 // Public Route (Redirect to dashboard if logged in)
 const PublicRoute = ({ children, useLayout = true }) => {
   const isAuthenticated = !!localStorage.getItem('token');
-
-  if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
+  if (isAuthenticated) return <Navigate to="/dashboard" replace />;
   return useLayout ? <MainLayout>{children}</MainLayout> : children;
 };
 
@@ -94,18 +90,22 @@ function App() {
       <Routes>
         {/* Public Website Routes */}
         <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
-        <Route path="/login" element={<PublicRoute useLayout={false}><Auth isLogin={true} /></PublicRoute>} />
-        <Route path="/register" element={<PublicRoute useLayout={false}><Auth isLogin={false} /></PublicRoute>} />
+
+        {/* UPDATED: Separate Login and Register Routes */}
+        <Route path="/login" element={<PublicRoute useLayout={false}><Login /></PublicRoute>} />
+        <Route path="/register" element={<PublicRoute useLayout={false}><Register /></PublicRoute>} />
+
         <Route path="/registration-success" element={<RegistrationSuccess />} />
 
         {/* Protected Dashboard Routes */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/my-page" element={<ProtectedRoute><CreateBusiness /></ProtectedRoute>} />
+        <Route path="/create-business" element={<ProtectedRoute><CreateBusiness /></ProtectedRoute>} />
         <Route path="/link-selection" element={<ProtectedRoute><LinkSelection /></ProtectedRoute>} />
 
-        {/* Public Pages (Customer facing - no layout) */}
+        <Route path="/my-page" element={<Navigate to="/create-business" replace />} />
+
+        {/* Public Pages */}
         <Route path="/r/:id" element={<PublicReviewPage />} />
-        <Route path="/:identifier/review" element={<AIReviewPage />} />
         <Route path="/:identifier/review" element={<AIReviewPage />} />
         <Route path="/:id" element={<LinkInBioPage />} />
 
@@ -117,4 +117,3 @@ function App() {
 }
 
 export default App;
-
