@@ -254,7 +254,7 @@ const Register = () => {
                                 disabled={otpSent}
                                 rightIcon={
                                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-slate-400 hover:text-primary-600 transition-colors">
-                                        <span className="material-symbols-outlined text-[18px]">{showPassword ? 'Hide' : 'Show'}</span>
+                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                     </button>
                                 }
                             />

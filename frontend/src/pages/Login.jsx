@@ -156,7 +156,7 @@ const Login = () => {
                             placeholder="name@company.com"
                             value={formData.email}
                             onChange={handleChange}
-                            className="bg-slate-50 border-slate-200 focus:bg-white transition-all"
+                            className="border-slate-200 focus:bg-white transition-all"
                         />
 
                         {loginMode === 'password' ? (
