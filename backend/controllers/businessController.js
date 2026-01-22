@@ -165,7 +165,8 @@ const trackQrScan = async (req, res) => {
         // Redirect to the frontend profile page
         // Use the business slug if available, otherwise identifier
         const targetSlug = business.slug || identifier;
-        const frontendUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/${targetSlug}`;
+        const defaultFrontend = process.env.VERCEL ? 'https://www.revlinko.com' : 'http://localhost:3000';
+        const frontendUrl = `${process.env.FRONTEND_URL || defaultFrontend}/${targetSlug}`;
         res.redirect(frontendUrl);
     } catch (error) {
         console.error("[trackQrScan] error: ", error);
