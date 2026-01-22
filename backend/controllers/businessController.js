@@ -144,10 +144,40 @@ const getBusinessByUser = async (req, res) => {
     }
 };
 
+const trackQrScan = async (req, res) => {
+    try {
+        const { identifier } = req.params;
+        const business = await Business.findOneAndUpdate(
+            {
+                $or: [
+                    { slug: identifier },
+                    { businessId: identifier }
+                ]
+            },
+            { $inc: { qrScanCount: 1 } },
+            { new: true }
+        );
+
+        if (!business) {
+            return res.status(404).json({ message: 'Business not found' });
+        }
+
+        // Redirect to the frontend profile page
+        // Use the business slug if available, otherwise identifier
+        const targetSlug = business.slug || identifier;
+        const frontendUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/${targetSlug}`;
+        res.redirect(frontendUrl);
+    } catch (error) {
+        console.error("[trackQrScan] error: ", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
 module.exports = {
     checkSlugAvailability,
     createBusiness,
     getBusinessByIdentifier,
     updateBusiness,
-    getBusinessByUser
+    getBusinessByUser,
+    trackQrScan
 };

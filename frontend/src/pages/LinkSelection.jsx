@@ -28,8 +28,7 @@ const LinkSelection = () => {
         { id: 'google_review', label: 'Google Review', icon: Star, color: 'text-amber-500', bg: 'bg-amber-50' },
         { id: 'google_maps', label: 'Google Maps', icon: MapPin, color: 'text-red-500', bg: 'bg-red-50' },
         { id: 'call', label: 'Call', icon: Phone, color: 'text-green-600', bg: 'bg-green-50' },
-        { id: 'email', label: 'Email', icon: Mail, color: 'text-indigo-500', bg: 'bg-indigo-50' },
-        { id: 'location', label: 'Location', icon: MapPin, color: 'text-red-500', bg: 'bg-red-50' },
+        { id: 'email', label: 'Email', icon: Mail, color: 'text-indigo-500', bg: 'bg-indigo-50' }
     ];
 
     const toggleLink = (label) => {

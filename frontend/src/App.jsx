@@ -17,6 +17,10 @@ import LinkInBioPage from './pages/LinkInBioPage';
 import Dashboard from './pages/Dashboard';
 import RegistrationSuccess from './pages/RegistrationSuccess';
 import AIReviewPage from './pages/AIReviewPage';
+import PrivacyPolicy from './pages/legal/PrivacyPolicy';
+import TermsOfService from './pages/legal/TermsOfService';
+import CookiePreferences from './pages/legal/CookiePreferences';
+import QRCodeScreen from './pages/QRCodeScreen';
 import './index.css';
 
 // Layout for the main website (Landing, Login, Register)
@@ -63,7 +67,7 @@ const DashboardLayout = ({ children }) => {
 
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <main className="flex-1 lg:ml-[260px] pt-16 lg:pt-0">
+      <main className="flex-1 lg:ml-[260px] pt-16 lg:pt-0 pb-24 lg:pb-0 safe-bottom">
         {children}
       </main>
     </div>
@@ -101,6 +105,7 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/create-business" element={<ProtectedRoute><CreateBusiness /></ProtectedRoute>} />
         <Route path="/link-selection" element={<ProtectedRoute><LinkSelection /></ProtectedRoute>} />
+        <Route path="/qr-code" element={<ProtectedRoute><QRCodeScreen /></ProtectedRoute>} />
 
         <Route path="/my-page" element={<Navigate to="/create-business" replace />} />
 
@@ -108,6 +113,11 @@ function App() {
         <Route path="/r/:id" element={<PublicReviewPage />} />
         <Route path="/:identifier/review" element={<AIReviewPage />} />
         <Route path="/:id" element={<LinkInBioPage />} />
+
+        {/* Legal Pages */}
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/cookies" element={<CookiePreferences />} />
 
         {/* Catch all */}
         <Route path="*" element={<Navigate to="/" replace />} />

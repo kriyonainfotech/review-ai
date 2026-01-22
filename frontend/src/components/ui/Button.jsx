@@ -28,9 +28,9 @@ const Button = ({
 
     const sizes = {
         sm: "px-3 h-9 text-xs rounded-lg",
-        md: "px-5 h-11 text-sm rounded-xl",
-        lg: "px-7 h-12 text-[15px] rounded-xl",
-        icon: "size-10 rounded-xl"
+        md: "px-5 h-12 text-sm rounded-xl",
+        lg: "px-7 h-14 text-base rounded-xl",
+        icon: "size-12 rounded-xl"
     };
 
     const combinedClasses = `${baseStyles} ${variants[variant]} ${sizes[size]} ${fullWidth ? 'w-full' : ''} ${className}`;

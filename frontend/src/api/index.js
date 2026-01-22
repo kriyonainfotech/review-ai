@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://review-api-smoky.vercel.app/api';
-// const BASE_URL = 'http://localhost:5000/api';
+// const BASE_URL = 'https://review-api-smoky.vercel.app/api';
+const BASE_URL = 'http://localhost:5000/api';
+// const BASE_URL = 'http://192.168.1.17:5000/api';
 
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -57,6 +58,11 @@ export const api = {
     verifyOTP: (email, otp) => apiRequest('/auth/verify-otp', {
         method: 'POST',
         body: { email, otp },
+    }),
+    getMe: () => apiRequest('/auth/me'),
+    updateProfile: (userData) => apiRequest('/auth/profile', {
+        method: 'PUT',
+        body: userData,
     }),
 
     // Business

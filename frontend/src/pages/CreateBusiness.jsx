@@ -104,8 +104,9 @@ const CreateBusiness = () => {
                 await api.createBusiness(data);
             }
 
-
-            navigate('/dashboard');
+            setIsViewOnly(true);
+            setIsEdit(true);
+            fetchBusinessData(); // Refresh data to get current state from DB
         } catch (err) {
             setError(err.message || 'Failed to save business profile.');
         } finally {
@@ -116,35 +117,30 @@ const CreateBusiness = () => {
     return (
         <>
             {/* --- Main Content --- */}
-            <div className="p-4 md:p-6 pb-28 md:pb-6 animate-fade-in-up"> {/* Added pb-28 for mobile scroll space */}
-                <header className="mb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <div className="flex items-center gap-2 text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-3">
-                            <span>Dashboard</span>
+            <div className="p-0 md:p-6 pb-28 md:pb-6 animate-fade-in-up md:bg-zinc-50/30">
+                <header className="mb-4 md:mb-8 flex items-center justify-between gap-4 px-4 md:px-1 pt-4 md:pt-0">
+                    <div className="space-y-0.5 min-w-0">
+                        <div className="flex items-center gap-2 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
+                            <span>Dash</span>
                             <ChevronRight size={10} />
                             <span className="text-primary-600">
-                                {isViewOnly ? 'View Page' : (isEdit ? 'Edit Page' : 'Create Page')}
+                                {isViewOnly ? 'Profile' : (isEdit ? 'Settings' : 'New')}
                             </span>
                         </div>
-                        <h1 className="text-xl font-extrabold text-zinc-900 tracking-tight mb-1">
-                            {isViewOnly ? 'Business Page' : (isEdit ? 'Update Business Page' : 'Create Business Page')}
+                        <h1 className="text-xl md:text-3xl font-black text-zinc-900 tracking-tight truncate">
+                            {isViewOnly ? 'Profile' : (isEdit ? 'Settings' : 'Create')}
                         </h1>
-                        <p className="text-zinc-500 font-medium text-sm">
-                            {isViewOnly ? 'Your business identity and branding.' : 'Set up your AI-powered review page.'}
-                        </p>
                     </div>
 
-                    {/* DESKTOP Edit Button */}
                     {isViewOnly && (
-                        <div className="hidden md:block">
-                            <Button
-                                onClick={() => setIsViewOnly(false)}
-                                className="h-10 rounded-xl bg-zinc-900 text-white hover:bg-zinc-800 flex items-center gap-2 px-4"
-                            >
-                                <UserPen size={16} />
-                                <span className="text-xs">Edit Page</span>
-                            </Button>
-                        </div>
+                        <Button
+                            onClick={() => setIsViewOnly(false)}
+                            className="h-9 md:h-10 rounded-xl bg-zinc-900 text-white hover:bg-zinc-800 flex items-center gap-2 px-4 shadow-sm-premium"
+                            size="sm"
+                        >
+                            <UserPen size={15} />
+                            <span className="text-xs font-bold">Edit</span>
+                        </Button>
                     )}
                 </header>
 
@@ -155,18 +151,20 @@ const CreateBusiness = () => {
                     </div>
                 )}
 
-                <Card className="p-6 md:p-8 border-zinc-100 shadow-lg">
+                <Card className="p-0 overflow-hidden bg-transparent">
                     {/* IMPORTANT: Added ID to form to connect external buttons */}
                     <form id="settings-form" onSubmit={handleSubmit} className="space-y-8" encType="multipart/form-data">
 
                         {/* ... (Keep ALL your existing Inputs/Sections exactly the same) ... */}
-                        <section>
-                            <div className="flex items-center gap-2 mb-6">
-                                <div className="w-8 h-8 bg-primary-50 text-primary-600 rounded-lg flex items-center justify-center">
-                                    <Building2 size={18} />
+                        <section className="mb-0 px-4 py-6 md:p-0 md:bg-transparent">
+                            {!isViewOnly && (
+                                <div className="hidden md:flex items-center gap-3 mb-8">
+                                    <div className="w-10 h-10 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center shadow-sm-premium">
+                                        <Building2 size={20} />
+                                    </div>
+                                    <h2 className="text-xl font-black text-zinc-900 tracking-tight">Business Identity</h2>
                                 </div>
-                                <h2 className="text-lg font-bold text-zinc-900">Business Identity</h2>
-                            </div>
+                            )}
 
                             <div className="mb-8">
                                 <label className="block text-xs font-bold text-zinc-700 mb-3 ml-1">Business Logo</label>
@@ -230,7 +228,7 @@ const CreateBusiness = () => {
                                         value={formData.businessDescription}
                                         onChange={handleChange}
                                         readOnly={isViewOnly}
-                                        className={`w-full px-3 py-2.5 rounded-xl border border-zinc-200 bg-white text-zinc-900 text-[14px] transition-all duration-200 outline-hidden focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 min-h-[80px] resize-none ${isViewOnly ? 'opacity-75 cursor-default' : ''}`}
+                                        className={`w-full px-3 py-2.5 rounded-xl border border-zinc-200 bg-white text-zinc-900 text-base md:text-[14px] transition-all duration-200 outline-hidden focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 min-h-[100px] resize-none ${isViewOnly ? 'opacity-75 cursor-default' : ''}`}
                                     />
                                 </div>
 
@@ -246,13 +244,15 @@ const CreateBusiness = () => {
                             </div>
                         </section>
 
-                        <section className="pt-8 border-t border-zinc-100">
-                            <div className="flex items-center gap-2 mb-6">
-                                <div className="w-8 h-8 bg-primary-50 text-primary-600 rounded-lg flex items-center justify-center">
-                                    <Sparkles size={18} />
+                        <section className="px-4 py-6 md:p-0 md:pt-8 border-t border-zinc-100 md:bg-zinc-50/30">
+                            {!isViewOnly && (
+                                <div className="hidden md:flex items-center gap-3 mb-8">
+                                    <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center shadow-sm-premium">
+                                        <Sparkles size={20} />
+                                    </div>
+                                    <h2 className="text-xl font-black text-zinc-900 tracking-tight">Branding & Links</h2>
                                 </div>
-                                <h2 className="text-lg font-bold text-zinc-900">Branding & Links</h2>
-                            </div>
+                            )}
 
                             <div className="space-y-8">
                                 <Input
@@ -266,35 +266,31 @@ const CreateBusiness = () => {
                                     className={`mb-0 ${isViewOnly ? 'opacity-75 cursor-default' : ''}`}
                                 />
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-xs font-bold text-zinc-700 mb-2 ml-1">Primary Color</label>
-                                        <div className="flex items-center gap-3">
-                                            <input
-                                                type="color"
-                                                id="primaryColor"
-                                                value={formData.primaryColor}
-                                                onChange={handleChange}
-                                                disabled={isViewOnly}
-                                                className={`w-10 h-10 rounded-lg cursor-pointer border-none p-0 overflow-hidden shadow-sm ${isViewOnly ? 'pointer-events-none' : ''}`}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-bold text-zinc-700 mb-2 ml-1">Secondary Color</label>
-                                        <div className="flex items-center gap-3">
-                                            <input
-                                                type="color"
-                                                id="secondaryColor"
-                                                value={formData.secondaryColor}
-                                                onChange={handleChange}
-                                                disabled={isViewOnly}
-                                                className={`w-10 h-10 rounded-lg cursor-pointer border-none p-0 overflow-hidden shadow-sm ${isViewOnly ? 'pointer-events-none' : ''}`}
-                                            />
-                                        </div>
-                                    </div>
+                                <div className="grid grid-cols-2 gap-6 my-6">
+                                    <Input
+                                        label="Primary Color"
+                                        id="primaryColor"
+                                        type="color"
+                                        value={formData.primaryColor}
+                                        onChange={handleChange}
+                                        readOnly={isViewOnly}
+                                        className={`h-12 p-1 rounded-xl ${isViewOnly ? 'opacity-75 cursor-default' : ''
+                                            }`}
+                                    />
+
+                                    <Input
+                                        label="Secondary Color"
+                                        id="secondaryColor"
+                                        type="color"
+                                        value={formData.secondaryColor}
+                                        onChange={handleChange}
+                                        readOnly={isViewOnly}
+                                        className={`h-12 p-1 rounded-xl ${isViewOnly ? 'opacity-75 cursor-default' : ''
+                                            }`}
+                                    />
                                 </div>
                             </div>
+
                         </section>
 
                         {/* DESKTOP ONLY Buttons (Hidden on mobile) */}
@@ -328,37 +324,7 @@ const CreateBusiness = () => {
                 </Card>
             </div>
 
-            {/* --- 1. MOBILE EDIT BUTTON (Circular FAB) --- */}
-            {isViewOnly && (
-                <div
-                    className="
-    fixed 
-    bottom-4 right-4 
-    sm:bottom-5 sm:right-5
-    z-50 
-    md:hidden
-    animate-in fade-in zoom-in duration-300
-    safe-bottom safe-right
-  "
-                >
-                    <Button
-                        size="icon"
-                        onClick={() => setIsViewOnly(false)}
-                        className="
-                        h-11 w-11
-                        sm:h-12 sm:w-12
-                        rounded-full
-                        bg-zinc-900 text-white
-                        shadow-2xl shadow-zinc-900/40
-                        transition-all
-                        hover:scale-105 active:scale-95
-                        flex items-center justify-center
-                        "
-                    >
-                        <UserPen className="h-5 w-5 sm:h-6 sm:w-6" />
-                    </Button>
-                </div>
-            )}
+            {/* --- 1. MOBILE EDIT BUTTON REMOVED IN FAVOR OF HEADER BUTTON --- */}
 
             {/* --- 2. MOBILE ACTION BAR (Cancel / Save) --- */}
             {!isViewOnly && (

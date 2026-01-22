@@ -20,8 +20,8 @@ const Input = ({ label, id, error, className = '', leftIcon: LeftIcon, rightIcon
                 <input
                     id={id}
                     className={`
-                        w-full h-11 transition-all duration-200 outline-none font-medium
-                        bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm
+                        w-full h-10 md:h-12 transition-all duration-200 outline-none font-medium
+                        bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl text-slate-900 text-base md:text-sm
                         focus:ring-4 focus:ring-primary-600/10 focus:border-primary-600
                         placeholder:text-slate-400 placeholder:font-normal
                         ${LeftIcon ? 'pl-11' : 'pl-4'}

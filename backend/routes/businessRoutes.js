@@ -1,5 +1,5 @@
 const express = require('express');
-const { createBusiness, getBusinessByIdentifier, getBusinessByUser, updateBusiness, checkSlugAvailability } = require('../controllers/businessController');
+const { createBusiness, getBusinessByIdentifier, getBusinessByUser, updateBusiness, checkSlugAvailability, trackQrScan } = require('../controllers/businessController');
 const { protect } = require('../middleware/authMiddleware');
 const upload = require('../utils/cloudinary');
 
@@ -18,5 +18,6 @@ router.get("/me", protect, getBusinessByUser)
 
 // Public Routes (The actual Link-in-Bio page)
 router.get('/:identifier', getBusinessByIdentifier);
+router.get('/t/:identifier', trackQrScan);
 
 module.exports = router;

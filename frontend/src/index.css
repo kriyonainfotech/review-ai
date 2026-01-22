@@ -38,6 +38,10 @@
 
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
+
+  --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -4px rgba(0, 0, 0, 0.02), 0 0 0 1px rgba(0, 0, 0, 0.02);
+  --shadow-sm-premium: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.02);
+  --shadow-card-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
 }
 
 @layer base {
@@ -80,6 +84,28 @@
   h6 {
     @apply font-bold tracking-tight text-zinc-900;
   }
+
+  /* Theme Scoping - Ensures custom themes override global styles */
+  .theme-scope {
+    color: var(--theme-text-primary);
+  }
+
+  .theme-scope h1,
+  .theme-scope h2,
+  .theme-scope h3,
+  .theme-scope h4,
+  .theme-scope h5,
+  .theme-scope h6,
+  .theme-scope p,
+  .theme-scope span,
+  .theme-scope div {
+    color: inherit;
+  }
+
+  .theme-scope a {
+    text-decoration: none;
+    color: inherit;
+  }
 }
 
 @layer utilities {
@@ -93,6 +119,14 @@
 
   .text-gradient {
     @apply bg-clip-text text-transparent bg-linear-to-r from-primary-600 to-indigo-600;
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
   }
 }
 

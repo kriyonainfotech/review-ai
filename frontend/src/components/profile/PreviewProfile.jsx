@@ -1,6 +1,8 @@
-import React from 'react';
-import { Building2, Sparkles, Star, Globe, Instagram, Facebook, Twitter, MessageCircle, Mail, MapPin, Share2, ChevronRight } from 'lucide-react';
-import Button from '../ui/Button';
+import React, { useMemo } from 'react';
+import { Building2, Sparkles, Star, Globe, Instagram, Facebook, Twitter, MessageCircle, Mail, MapPin, Share2 } from 'lucide-react';
+import { ThemeProvider, useTheme } from '../../themes/ThemeProvider';
+import CardRenderer from './CardRenderer';
+import { Link } from 'react-router-dom';
 
 const GoogleIcon = ({ size = 20 }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
@@ -21,21 +23,18 @@ const iconMap = {
     default: Globe
 };
 
-const PreviewProfile = ({ business, isPreview = false }) => {
-    if (!business) return null;
+const ProfileContent = ({ business, isPreview }) => {
+    const { theme } = useTheme();
 
     const {
         businessName,
         businessDescription,
         businessServices,
-        primaryColor = '#3b82f6',
-        secondaryColor = '#ffffff',
         logoUrl,
         links = [],
-        slug
+        slug,
     } = business;
 
-    const services = businessServices ? businessServices.split(',').map(s => s.trim()) : [];
     const activeLinks = links.filter(l => l.isActive !== false);
     const locationLink = activeLinks.find(l => l.type?.toLowerCase() === 'location' || l.type?.toLowerCase() === 'google_maps');
     const otherLinks = activeLinks.filter(l => l !== locationLink);
@@ -51,48 +50,51 @@ const PreviewProfile = ({ business, isPreview = false }) => {
     };
 
     return (
-        <div className={`flex flex-col min-h-screen bg-white font-sans selection:bg-blue-100 ${isPreview ? 'rounded-[3rem] overflow-hidden max-h-[800px]' : ''}`}
-            style={{ '--primary-client': primaryColor, '--secondary-client': secondaryColor }}>
-
-            {/* Sticky Header */}
-            {!isPreview && (
-                <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md px-6 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div className="text-primary-600">
-                            <Sparkles size={24} fill="currentColor" />
-                        </div>
-                        <span className="text-lg font-black tracking-tight text-zinc-900">RevLinko</span>
-                    </div>
-                    <button
-                        onClick={sharePage}
-                        className="p-2.5 bg-zinc-50 text-zinc-600 rounded-full hover:bg-zinc-100 transition-colors"
-                    >
-                        <Share2 size={20} />
-                    </button>
+        <div
+            className={`flex flex-col min-h-screen transition-all duration-500 ${isPreview ? 'rounded-[3rem] overflow-y-auto' : ''}`}
+            style={{
+                backgroundImage: 'var(--theme-bg-gradient)',
+                backgroundSize: 'var(--theme-bg-size)',
+                backgroundColor: 'var(--theme-bg)',
+                fontFamily: 'var(--theme-font-body)'
+            }}
+        >
+            {/* Header Actions */}
+            <div className="flex items-center justify-between px-8 pt-8 pb-2 relative z-20">
+                <div
+                    className="w-10 h-10 bg-white/10 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/20 shadow-xl"
+                    style={{ color: 'var(--accent-color)' }}
+                >
+                    <Sparkles size={20} fill="currentColor" />
                 </div>
-            )}
+                <button
+                    onClick={sharePage}
+                    className="w-10 h-10 bg-white/10 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/20 shadow-xl transition-all hover:scale-110 active:scale-95 group"
+                    style={{ color: 'var(--btn-text)' }}
+                >
+                    <Share2 size={18} className="group-hover:rotate-12 transition-transform" />
+                </button>
+            </div>
 
-            <div className={`w-full max-w-[480px] mx-auto flex flex-col px-6 ${isPreview ? 'py-8' : 'pt-3 pb-16'}`}>
-
+            <div className={`w-full max-w-[480px] mx-auto flex flex-col px-6 ${isPreview ? 'pb-8 pt-2' : 'pt-10 pb-16'}`}>
                 {/* Profile Section */}
-                <div className="text-center mb-5">
+                <div className="text-center mb-8">
                     <div className="relative inline-block mb-6">
-                        <div className={`relative ${isPreview ? 'w-20 h-20' : 'w-28 h-28'} bg-white rounded-full shadow-2xl flex items-center justify-center mx-auto border-[6px] border-white overflow-hidden ring-1 ring-zinc-100`}>
+                        <div className={`relative ${isPreview ? 'w-20 h-20' : 'w-28 h-28'} bg-white/10 backdrop-blur-md rounded-full shadow-2xl flex items-center justify-center mx-auto border-[6px] border-white/20 overflow-hidden ring-1 ring-white/10`}>
                             {logoUrl ? (
                                 <img src={logoUrl} alt={businessName} className="w-full h-full object-cover" />
                             ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-zinc-50">
-                                    <Building2 size={isPreview ? 28 : 40} className="text-zinc-200" />
+                                <div className="w-full h-full flex items-center justify-center bg-zinc-50/10">
+                                    <Building2 size={isPreview ? 28 : 40} className="text-white/20" />
                                 </div>
-                            )}
-                            {/* Subtle Overlay Pattern for logo placeholder if no url */}
-                            {!logoUrl && (
-                                <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" />
                             )}
                         </div>
                     </div>
 
-                    <h1 className={`${isPreview ? 'text-xl' : 'text-2xl'} font-extrabold text-zinc-900 tracking-tight mb-2`}>
+                    <h1
+                        className={`${isPreview ? 'text-2xl' : 'text-3xl'} font-extrabold tracking-tight mb-3`}
+                        style={{ color: 'var(--theme-text-primary)', fontFamily: 'var(--theme-font-title)' }}
+                    >
                         {businessName}
                     </h1>
                 </div>
@@ -100,80 +102,48 @@ const PreviewProfile = ({ business, isPreview = false }) => {
                 {/* Links Section */}
                 <div className="space-y-4 mb-12">
                     {/* Primary Action: Google Review */}
-                    <a
-                        href={`/${slug}/review`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group relative flex items-center gap-3 w-full bg-primary-600 hover:bg-primary-700 text-white rounded-[1.25rem] p-2.5 transition-all duration-300 shadow-xl shadow-primary-500/25 active:scale-[0.98]"
-                    >
-                        <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
-                            <Star size={18} fill="currentColor" />
-                        </div>
-                        <span className={`flex-1 font-bold tracking-tight ${isPreview ? 'text-[13px]' : 'text-[15px]'}`}>
-                            AI Google Review
-                        </span>
-                        <ChevronRight size={16} className="mr-1 opacity-60 group-hover:translate-x-1 transition-transform" />
-                    </a>
+                    <CardRenderer
+                        label="Review us on Google"
+                        url={`/${slug}/review`}
+                        icon={Star}
+                        primary={true}
+                    />
 
                     {/* Other Links */}
-                    {otherLinks.map((link, i) => {
-                        const Icon = iconMap[link.type?.toLowerCase()] || iconMap.default;
-                        return (
-                            <a
-                                key={i}
-                                href={link.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="group relative flex items-center gap-3 w-full bg-white border border-zinc-100 hover:border-zinc-200 text-zinc-900 rounded-[1.25rem] p-2.5 transition-all duration-300 shadow-sm hover:shadow-md active:scale-[0.98]"
-                            >
-                                <div className="w-9 h-9 bg-zinc-50 rounded-lg flex items-center justify-center text-zinc-600 group-hover:bg-zinc-100 transition-colors">
-                                    <Icon size={18} strokeWidth={2.5} />
-                                </div>
-                                <span className={`flex-1 font-bold tracking-tight ${isPreview ? 'text-[11px]' : 'text-[14px]'}`}>
-                                    {link.label || link.type}
-                                </span>
-                                <ChevronRight size={16} className="mr-1 opacity-30 group-hover:translate-x-1 transition-transform" />
-                            </a>
-                        );
-                    })}
+                    {otherLinks.map((link, i) => (
+                        <CardRenderer
+                            key={i}
+                            label={link.label || link.type}
+                            url={link.url}
+                            icon={iconMap[link.type?.toLowerCase()] || iconMap.default}
+                        />
+                    ))}
                 </div>
 
-                {/* Location Section */}
-                {locationLink && (
-                    <div className="mb-12">
-                        <a
-                            href={locationLink.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group relative block w-full aspect-[2/1] bg-zinc-100 rounded-[2rem] overflow-hidden border-4 border-white shadow-xl isolate active:scale-[0.98] transition-transform"
-                        >
-                            {/* Map Background Pattern */}
-                            <div className="absolute inset-0 opacity-40 pointer-events-none">
-                                <img
-                                    src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&q=80&w=800"
-                                    alt="Map Background"
-                                    className="w-full h-full object-cover filter grayscale sepia brightness-50 contrast-125"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                            </div>
-
-                            <div className="absolute inset-0 flex items-end p-6">
-                                <div className="flex items-center gap-3 bg-white px-4 py-2.5 rounded-2xl shadow-lg group-hover:scale-105 transition-transform">
-                                    <div className="w-6 h-6 bg-red-50 text-red-500 rounded-full flex items-center justify-center">
-                                        <MapPin size={14} fill="currentColor" />
-                                    </div>
-                                    <span className="text-sm font-bold text-zinc-900">Visit our location</span>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                )}
-
                 {/* Footer Section */}
-                <footer className="mt-auto py-8 text-center flex flex-col items-center gap-4">
-                    <div className="flex items-center gap-2 text-[10px] font-black tracking-[0.2em] text-zinc-400 uppercase">
+                <footer className="mt-auto py-8 text-center flex flex-col items-center gap-6">
+                    <Link
+                        to="/register"
+                        className="px-8 py-3 rounded-full text-sm font-bold shadow-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                        style={{
+                            backgroundColor: 'var(--accent-color)',
+                            color: 'var(--btn-text)',
+                            fontFamily: 'var(--theme-font-title)',
+                        }}
+                    >
+                        Join {businessName} on RevLinko
+                    </Link>
+
+                    <div className="flex items-center gap-4 text-[10px] font-medium tracking-wider opacity-60" style={{ color: 'var(--btn-text)', fontFamily: 'var(--theme-font-title)' }}>
+                        <Link to="/privacy" className="hover:opacity-100 transition-opacity">Privacy Policy</Link>
+                        <span className="w-1 h-1 rounded-full bg-current opacity-50"></span>
+                        <Link to="/terms" className="hover:opacity-100 transition-opacity">Terms of Service</Link>
+                        <span className="w-1 h-1 rounded-full bg-current opacity-50"></span>
+                        <Link to="/cookies" className="hover:opacity-100 transition-opacity">Cookies</Link>
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px] font-black tracking-[0.2em] uppercase opacity-70" style={{ color: 'var(--btn-text)', fontFamily: 'var(--theme-font-title)' }}>
                         <span>Powered by</span>
-                        <div className="flex items-center gap-1 text-primary-600">
+                        <div className="flex items-center gap-1" style={{ color: 'var(--accent-color)' }}>
                             <Sparkles size={10} fill="currentColor" />
                             <span>RevLinko</span>
                         </div>
@@ -182,6 +152,43 @@ const PreviewProfile = ({ business, isPreview = false }) => {
             </div>
         </div>
     );
+};
+
+const PreviewProfile = ({ business, isPreview = false }) => {
+    if (!business) return null;
+
+    return (
+        <SafeThemeProvider business={business}>
+            <ProfileContent business={business} isPreview={isPreview} />
+        </SafeThemeProvider>
+    );
+};
+
+const SafeThemeProvider = ({ business, children }) => {
+    try {
+        useTheme();
+        return <>{children}</>;
+    } catch (e) {
+        let customOverrides = null;
+        try {
+            if (business.customConfig) {
+                customOverrides = typeof business.customConfig === 'string'
+                    ? JSON.parse(business.customConfig)
+                    : business.customConfig;
+            }
+        } catch (err) {
+            customOverrides = null;
+        }
+
+        return (
+            <ThemeProvider
+                initialThemeId={business.themeId || 'clean_white'}
+                customOverrides={customOverrides}
+            >
+                {children}
+            </ThemeProvider>
+        );
+    }
 };
 
 export default PreviewProfile;
