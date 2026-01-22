@@ -7,6 +7,7 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import { ThemeProvider } from '../themes/ThemeProvider';
 import PreviewProfile from '../components/profile/PreviewProfile';
+import { BASE_URL } from '../api';
 
 const QRCodeScreen = () => {
     const navigate = useNavigate();
@@ -77,7 +78,7 @@ const QRCodeScreen = () => {
 
     if (!business) return null;
 
-    const trackingUrl = `http://localhost:5000/api/business/t/${business.slug}`;
+    const trackingUrl = `${BASE_URL}/business/t/${business.slug}`;
 
     return (
         <div className="min-h-screen bg-zinc-50/50 p-4 md:p-8">
