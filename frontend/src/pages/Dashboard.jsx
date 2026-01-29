@@ -37,8 +37,15 @@ import DesignPanel from '../components/dashboard/DesignPanel';
 import { themePresets } from '../themes/themeConfig';
 import MobileNav from '../components/layout/MobileNav';
 
+const WhatsAppIcon = ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+    </svg>
+);
+
 const iconOptions = [
-    { value: 'whatsapp', label: 'WhatsApp', icon: MessageCircle },
+    { value: 'whatsapp', label: 'WhatsApp', icon: WhatsAppIcon },
+    { value: 'whatsapp_channel', label: 'WhatsApp Channel', icon: WhatsAppIcon },
     { value: 'location', label: 'Location', icon: MapPin },
     { value: 'youtube', label: 'YouTube', icon: Youtube },
     { value: 'instagram', label: 'Instagram', icon: Instagram },
@@ -49,6 +56,82 @@ const iconOptions = [
     { value: 'email', label: 'Email', icon: Mail },
     { value: 'phone', label: 'Phone', icon: Phone },
 ];
+
+// Reusable Form Component
+const LinkInputForm = ({ linkData, setLinkData, onCancel, onSave, isSaving }) => {
+    return (
+        <Card className="p-4 border-primary-200 bg-primary-50/30 animate-in fade-in slide-in-from-top-4 duration-300">
+            <form onSubmit={onSave} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest ml-1">Type</label>
+                        <select
+                            value={linkData.type}
+                            onChange={(e) => setLinkData({ ...linkData, type: e.target.value })}
+                            className="w-full h-12 px-3 rounded-xl border border-zinc-200 bg-white text-base md:text-sm font-bold text-zinc-700 outline-none focus:ring-2 focus:ring-primary-500/20"
+                        >
+                            {iconOptions.map(opt => (
+                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest ml-1">Label (Optional)</label>
+                        <input
+                            type="text"
+                            placeholder="e.g. Follow on Instagram"
+                            value={linkData.label}
+                            onChange={(e) => setLinkData({ ...linkData, label: e.target.value })}
+                            className="w-full h-12 px-3 rounded-xl border border-zinc-200 bg-white text-base md:text-sm font-bold text-zinc-900 outline-none focus:ring-2 focus:ring-primary-500/20"
+                        />
+                    </div>
+                    <div className="space-y-1 sm:col-span-2 md:col-span-1">
+                        <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest ml-1">
+                            {(linkData.type === 'phone' || linkData.type === 'whatsapp') ? 'Phone Number' :
+                                linkData.type === 'email' ? 'Email Address' :
+                                    'URL'}
+                        </label>
+                        <input
+                            type={(linkData.type === 'phone' || linkData.type === 'whatsapp') ? 'tel' : linkData.type === 'email' ? 'email' : 'url'}
+                            required
+                            pattern={(linkData.type === 'phone' || linkData.type === 'whatsapp') ? "[0-9]{10}" : undefined}
+                            maxLength={(linkData.type === 'phone' || linkData.type === 'whatsapp') ? 10 : undefined}
+                            placeholder={
+                                (linkData.type === 'phone' || linkData.type === 'whatsapp') ? '1234567890' :
+                                    linkData.type === 'email' ? 'example@email.com' :
+                                        'https://...'
+                            }
+                            value={linkData.url}
+                            onChange={(e) => {
+                                const val = e.target.value;
+                                if ((linkData.type === 'phone' || linkData.type === 'whatsapp') && !/^\d*$/.test(val)) return;
+                                setLinkData({ ...linkData, url: val });
+                            }}
+                            className="w-full h-12 px-3 rounded-xl border border-zinc-200 bg-white text-base md:text-sm font-bold text-zinc-900 outline-none focus:ring-2 focus:ring-primary-500/20"
+                        />
+                    </div>
+                </div>
+                <div className="flex justify-end gap-2 pt-1">
+                    <button
+                        type="button"
+                        onClick={onCancel}
+                        className="px-4 py-2 text-xs font-bold text-zinc-500 hover:text-zinc-700 transition-colors"
+                    >
+                        Cancel
+                    </button>
+                    <Button
+                        type="submit"
+                        disabled={isSaving}
+                        size="sm"
+                        className="px-6 h-10 shadow-lg shadow-primary-500/10"
+                    >
+                        {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : (onSave.name === 'handleUpdateLink' ? 'Update Link' : 'Save Link')}
+                    </Button>
+                </div>
+            </form>
+        </Card>
+    );
+};
 
 const Dashboard = () => {
     const [business, setBusiness] = useState(null);
@@ -151,19 +234,41 @@ const Dashboard = () => {
         link.click();
     };
 
-    const handleAddLink = async (e) => {
+    const handleSaveLink = async (e) => { // Renamed from handleAddLink
         e.preventDefault();
         if (!newLink.url) return;
 
+        // Validation based on type
+        if (newLink.type === 'phone' || newLink.type === 'whatsapp') {
+            const phoneRegex = /^\d{10}$/;
+            if (!phoneRegex.test(newLink.url)) {
+                alert('Please enter a valid 10-digit phone number');
+                return;
+            }
+        } else if (newLink.type === 'email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(newLink.url)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+        }
+
+
         setIsSaving(true);
         try {
+            let linkToSave = { ...newLink };
+            if (newLink.type === 'whatsapp' && /^\d+$/.test(newLink.url)) {
+                // Automatically add 91 prefix if not present (assuming user enters 10 digits as validated)
+                linkToSave.url = `https://wa.me/91${newLink.url}`;
+            }
+
             let updatedLinks;
             if (editingIndex !== null) {
                 updatedLinks = business.links.map((link, i) =>
-                    i === editingIndex ? { ...newLink, isActive: link.isActive } : link
+                    i === editingIndex ? { ...linkToSave, isActive: link.isActive } : link
                 );
             } else {
-                updatedLinks = [...(business.links || []), { ...newLink, isActive: true }];
+                updatedLinks = [...(business.links || []), { ...linkToSave, isActive: true }];
             }
 
             const updatedBusiness = await api.updateBusiness(business._id, { links: updatedLinks });
@@ -180,9 +285,17 @@ const Dashboard = () => {
 
     const startEditing = (index) => {
         const link = business.links[index];
-        setNewLink({ type: link.type, label: link.label || '', url: link.url });
+        let url = link.url;
+        if (link.type === 'whatsapp') {
+            // Extract trailing 10 digits if it matches standard wa.me format
+            const match = url.match(/(?:wa\.me\/(?:91)?)(\d{10})$/);
+            if (match) {
+                url = match[1];
+            }
+        }
+        setNewLink({ type: link.type, label: link.label || '', url: url });
         setEditingIndex(index);
-        setIsAddingLink(true);
+        // setIsAddingLink(true); // Don't show top form
     };
 
     const handleDeleteLink = async (index) => {
@@ -192,6 +305,10 @@ const Dashboard = () => {
             const updatedLinks = business.links.filter((_, i) => i !== index);
             const updatedBusiness = await api.updateBusiness(business._id, { links: updatedLinks });
             setBusiness(updatedBusiness);
+            if (editingIndex === index) {
+                setEditingIndex(null);
+                setNewLink({ type: 'website', label: '', url: '' });
+            }
         } catch (err) {
             setError('Failed to delete link');
         }
@@ -456,71 +573,36 @@ const Dashboard = () => {
                                 </div>
 
                                 {isAddingLink && (
-                                    <Card className="p-4 border-primary-200 bg-primary-50/30 animate-in fade-in slide-in-from-top-4 duration-300">
-                                        <form onSubmit={handleAddLink} className="space-y-4">
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                                                <div className="space-y-1">
-                                                    <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest ml-1">Type</label>
-                                                    <select
-                                                        value={newLink.type}
-                                                        onChange={(e) => setNewLink({ ...newLink, type: e.target.value })}
-                                                        className="w-full h-12 px-3 rounded-xl border border-zinc-200 bg-white text-base md:text-sm font-bold text-zinc-700 outline-none focus:ring-2 focus:ring-primary-500/20"
-                                                    >
-                                                        {iconOptions.map(opt => (
-                                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                                <div className="space-y-1">
-                                                    <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest ml-1">Label (Optional)</label>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="e.g. Follow on Instagram"
-                                                        value={newLink.label}
-                                                        onChange={(e) => setNewLink({ ...newLink, label: e.target.value })}
-                                                        className="w-full h-12 px-3 rounded-xl border border-zinc-200 bg-white text-base md:text-sm font-bold text-zinc-900 outline-none focus:ring-2 focus:ring-primary-500/20"
-                                                    />
-                                                </div>
-                                                <div className="space-y-1 sm:col-span-2 md:col-span-1">
-                                                    <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest ml-1">URL</label>
-                                                    <input
-                                                        type="url"
-                                                        required
-                                                        placeholder="https://..."
-                                                        value={newLink.url}
-                                                        onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
-                                                        className="w-full h-12 px-3 rounded-xl border border-zinc-200 bg-white text-base md:text-sm font-bold text-zinc-900 outline-none focus:ring-2 focus:ring-primary-500/20"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="flex justify-end gap-2 pt-1">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        setIsAddingLink(false);
-                                                        setEditingIndex(null);
-                                                        setNewLink({ type: 'website', label: '', url: '' });
-                                                    }}
-                                                    className="px-4 py-2 text-xs font-bold text-zinc-500 hover:text-zinc-700 transition-colors"
-                                                >
-                                                    Cancel
-                                                </button>
-                                                <Button
-                                                    type="submit"
-                                                    disabled={isSaving}
-                                                    size="sm"
-                                                    className="px-6 h-10 shadow-lg shadow-primary-500/10"
-                                                >
-                                                    {isSaving ? <Loader2 className="animate-spin w-4 h-4" /> : (editingIndex !== null ? 'Update Link' : 'Save Link')}
-                                                </Button>
-                                            </div>
-                                        </form>
-                                    </Card>
+                                    <LinkInputForm
+                                        linkData={newLink}
+                                        setLinkData={setNewLink}
+                                        onCancel={() => {
+                                            setIsAddingLink(false);
+                                            setNewLink({ type: 'website', label: '', url: '' });
+                                        }}
+                                        onSave={handleSaveLink}
+                                        isSaving={isSaving}
+                                    />
                                 )}
 
                                 <div className="grid gap-3">
                                     {business.links && business.links.length > 0 ? (
                                         business.links.map((link, index) => {
+                                            if (editingIndex === index) {
+                                                return (
+                                                    <LinkInputForm
+                                                        key={index}
+                                                        linkData={newLink}
+                                                        setLinkData={setNewLink}
+                                                        onCancel={() => {
+                                                            setEditingIndex(null);
+                                                            setNewLink({ type: 'website', label: '', url: '' });
+                                                        }}
+                                                        onSave={handleSaveLink}
+                                                        isSaving={isSaving}
+                                                    />
+                                                );
+                                            }
                                             const Icon = iconOptions.find(opt => opt.value === link.type)?.icon || Globe;
                                             return (
                                                 <Card key={index} className="p-4 flex items-center justify-between md:rounded-2xl md:border border-zinc-100 hover:border-zinc-200 transition-all bg-white md:shadow-premium group rounded-none border-x-0 border-t-0 border-b shadow-none">
