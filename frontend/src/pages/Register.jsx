@@ -187,10 +187,10 @@ const Register = () => {
                 </div>
                 <div className="z-10 px-10 py-8">
                     <Link to="/" className="flex items-center gap-2.5 text-white">
-                        <div className="size-9 flex items-center justify-center rounded-lg bg-white text-primary-600 shadow-lg">
-                            <Sparkles size={20} fill="currentColor" />
+                        <div className="size-9 flex items-center justify-center rounded-lg bg-white shadow-lg">
+                            <img src="/Vector.svg" alt="Logo" className="w-5 h-auto" />
                         </div>
-                        <h2 className="text-xl font-bold tracking-tight">RevLinko</h2>
+                        <img src="/Vector2.svg" alt="RevLinko" className="h-5 w-auto brightness-0 invert" />
                     </Link>
                 </div>
                 <div className="z-10 px-10 py-16">
@@ -207,10 +207,10 @@ const Register = () => {
                 {/* Mobile Header: Logo at top left/start */}
                 <div className="lg:hidden w-full flex justify-start pt-4 pb-12">
                     <Link to="/" className="flex items-center gap-2 group">
-                        <div className="size-10 flex items-center justify-center text-primary-600 bg-primary-50 rounded-xl">
-                            <Sparkles size={24} fill="currentColor" />
+                        <div className="size-10 flex items-center justify-center bg-primary-50 rounded-xl">
+                            <img src="/Vector.svg" alt="Logo" className="w-6 h-auto" />
                         </div>
-                        <span className="text-xl font-black tracking-tight text-slate-900">RevLinko</span>
+                        <img src="/Vector2.svg" alt="RevLinko" className="h-6 w-auto" />
                     </Link>
                 </div>
 

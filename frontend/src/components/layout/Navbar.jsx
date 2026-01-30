@@ -9,10 +9,10 @@ const Navbar = () => {
             <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-2 transition-opacity hover:opacity-90">
-                    <div className="text-primary-600">
-                        <Sparkles size={32} fill="currentColor" />
+                    <div className="size-10 flex items-center justify-center bg-primary-50 rounded-xl">
+                        <img src="/Vector.svg" alt="Logo" className="w-6 h-auto" />
                     </div>
-                    <h2 className="text-xl font-black tracking-tight font-sans">RevLinko</h2>
+                    <img src="/Vector2.svg" alt="RevLinko" className="h-6 w-auto" />
                 </Link>
 
                 {/* Navigation Links */}

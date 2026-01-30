@@ -6,7 +6,6 @@ import {
     Link2,
     BarChart3,
     Settings,
-    Sparkles,
     UserCircle,
     X,
     LogOut
@@ -35,10 +34,10 @@ const Sidebar = ({ isOpen, onClose }) => {
             {/* Logo Area & Close Button */}
             <div className="mb-10 px-2 flex items-center justify-between">
                 <Link to="/" onClick={onClose} className="flex items-center gap-2.5 group">
-                    <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white group-hover:bg-primary-700 transition-colors">
-                        <Sparkles size={18} fill="currentColor" />
+                    <div className="w-8 h-8 bg-primary-50 rounded-lg flex items-center justify-center group-hover:bg-primary-100 transition-colors">
+                        <img src="/Vector.svg" alt="Logo" className="w-5 h-auto" />
                     </div>
-                    <span className="text-lg font-bold tracking-tight text-zinc-900 leading-none">RevLinko</span>
+                    <img src="/Vector2.svg" alt="RevLinko" className="h-5 w-auto" />
                 </Link>
                 <button
                     onClick={onClose}

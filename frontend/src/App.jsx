@@ -49,10 +49,10 @@ const DashboardLayout = ({ children }) => {
           <Menu size={24} />
         </button>
         <div className="flex items-center gap-2">
-          <div className="text-primary-600">
-            <Sparkles size={24} fill="currentColor" />
+          <div className="size-8 flex items-center justify-center bg-primary-50 rounded-lg">
+            <img src="/Vector.svg" alt="Logo" className="w-5 h-auto" />
           </div>
-          <span className="text-lg font-black text-zinc-900 tracking-tight font-sans">RevLinko</span>
+          <img src="/Vector2.svg" alt="RevLinko" className="h-5 w-auto" />
         </div>
         <div className="w-10"></div>
       </div>

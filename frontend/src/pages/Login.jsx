@@ -4,10 +4,12 @@ import { Mail, Lock, Check, AlertCircle, Sparkles, Loader2, Eye, EyeOff } from '
 import { api } from '../api';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import WelcomeLoader from '../components/ui/WelcomeLoader';
 
 const Login = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [showWelcome, setShowWelcome] = useState(false);
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
@@ -67,22 +69,27 @@ const Login = () => {
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data));
 
-            // 3. INTELLIGENT REDIRECT: Check if business exists
-            // This handles the "User verified but closed tab" scenario
-            try {
-                await api.getMyBusiness();
-                // If successful, business exists -> Go to Dashboard
-                navigate('/dashboard');
-            } catch (bizErr) {
-                // If 404 (or other error), business setup is incomplete -> Go to Setup
-                navigate('/create-business');
-            }
+            // 3. SHOW WELCOME ANIMATION !!
+            setShowWelcome(true);
+
+            // 4. INTELLIGENT REDIRECT (Delayed)
+            setTimeout(async () => {
+                try {
+                    await api.getMyBusiness();
+                    navigate('/dashboard');
+                } catch (bizErr) {
+                    navigate('/create-business');
+                }
+            }, 3000); // 3 seconds delay for the animation
         } catch (err) {
             setError(err.message || 'Login failed. Please check your credentials.');
-        } finally {
             setLoading(false);
         }
     };
+
+    if (showWelcome) {
+        return <WelcomeLoader />;
+    }
 
     return (
         <div className="flex min-h-screen w-full flex-col lg:flex-row bg-white font-sans text-slate-900">
@@ -94,10 +101,10 @@ const Login = () => {
                 </div>
                 <div className="z-10 px-10 py-8">
                     <Link to="/" className="flex items-center gap-2.5 text-white">
-                        <div className="size-9 flex items-center justify-center rounded-lg bg-white text-primary-600 shadow-lg">
-                            <Sparkles size={20} fill="currentColor" />
+                        <div className="size-9 flex items-center justify-center rounded-lg bg-white shadow-lg">
+                            <img src="/Vector.svg" alt="Logo" className="w-5 h-auto" />
                         </div>
-                        <h2 className="text-xl font-bold tracking-tight">RevLinko</h2>
+                        <img src="/Vector2.svg" alt="RevLinko" className="h-5 w-auto brightness-0 invert" />
                     </Link>
                 </div>
                 <div className="z-10 px-10 py-16">
@@ -114,10 +121,10 @@ const Login = () => {
                 {/* Mobile Header: Logo at top left/start */}
                 <div className="lg:hidden w-full flex justify-start pt-4 pb-12">
                     <Link to="/" className="flex items-center gap-2 group">
-                        <div className="size-10 flex items-center justify-center text-primary-600 bg-primary-50 rounded-xl">
-                            <Sparkles size={24} fill="currentColor" />
+                        <div className="size-10 flex items-center justify-center bg-primary-50 rounded-xl">
+                            <img src="/Vector.svg" alt="Logo" className="w-6 h-auto" />
                         </div>
-                        <span className="text-xl font-black tracking-tight text-slate-900">RevLinko</span>
+                        <img src="/Vector2.svg" alt="RevLinko" className="h-6 w-auto" />
                     </Link>
                 </div>
 

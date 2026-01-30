@@ -4,7 +4,6 @@ import {
     Star,
     Copy,
     Check,
-    Sparkles,
     ArrowRight,
     Loader2,
     Building2
@@ -63,7 +62,7 @@ const AIReviewPageContent = ({ business, review, genLoading, handleGenerateRevie
 
                     <div className="relative mb-6">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-primary-400 text-[10px] font-black uppercase tracking-widest mb-4 border border-white/5">
-                            <Sparkles size={12} strokeWidth={3} className="text-primary-400" />
+                            <img src="/Vector.svg" alt="AI" className="w-3 h-auto brightness-0 invert" />
                             AI Generated
                         </div>
                         <div className="flex gap-1 mb-6">
@@ -91,7 +90,7 @@ const AIReviewPageContent = ({ business, review, genLoading, handleGenerateRevie
                             className="font-black text-[11px] uppercase tracking-widest transition-all flex items-center gap-1.5 disabled:opacity-50 hover:opacity-80"
                             style={{ color: 'var(--accent-color)' }}
                         >
-                            <Sparkles size={14} />
+                            <img src="/Vector.svg" alt="AI" className="w-3.5 h-auto brightness-0 invert" />
                             Regenerate
                         </button>
                         <p className="text-[10px] font-bold opacity-40 uppercase tracking-widest flex items-center gap-2">

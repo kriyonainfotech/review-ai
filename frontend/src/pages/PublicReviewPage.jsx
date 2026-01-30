@@ -3,7 +3,6 @@ import { Link, useParams } from 'react-router-dom';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import {
-    Sparkles,
     Star,
     Copy,
     ExternalLink,
@@ -60,7 +59,7 @@ const PublicReviewPage = () => {
                     <div className="relative w-24 h-24 mx-auto mb-10">
                         <div className="absolute inset-0 bg-primary-100 rounded-[2rem] animate-pulse"></div>
                         <div className="relative z-10 w-full h-full bg-white rounded-[1.75rem] border-4 border-primary-50 flex items-center justify-center text-primary-600 shadow-xl" style={{ color: business?.primaryColor || '#3b82f6' }}>
-                            <Sparkles size={40} className="animate-bounce" />
+                            <img src="/Vector.svg" alt="L" className="w-12 h-auto animate-bounce" />
                         </div>
                         <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-primary-600 text-white rounded-full flex items-center justify-center border-4 border-white shadow-lg" style={{ backgroundColor: business?.primaryColor || '#3b82f6' }}>
                             <Loader2 size={18} className="animate-spin" />
@@ -112,7 +111,7 @@ const PublicReviewPage = () => {
                             <img src={business.logoUrl} alt={businessName} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                         ) : (
                             <div className="w-full h-full rounded-2xl flex items-center justify-center text-white transition-transform duration-500 group-hover:scale-110" style={{ backgroundColor: primaryColor }}>
-                                <Sparkles size={40} />
+                                <img src="/Vector.svg" alt="L" className="w-12 h-auto brightness-0 invert" />
                             </div>
                         )}
                     </div>
@@ -131,7 +130,7 @@ const PublicReviewPage = () => {
 
                     <div className="relative">
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-white text-[11px] font-black uppercase tracking-widest mb-8 shadow-lg translate-y-[-4px]" style={{ backgroundColor: '#10b981' }}>
-                            <Sparkles size={12} strokeWidth={3} />
+                            <img src="/Vector.svg" alt="AI" className="w-3 h-auto brightness-0 invert" />
                             Suggested Review
                         </div>
 
@@ -178,11 +177,12 @@ const PublicReviewPage = () => {
                         ))}
                     </div>
 
-                    <Link to="/dashboard" className="inline-flex items-center gap-2 group">
-                        <span className="text-[10px] font-black text-zinc-300 uppercase tracking-[0.2em] group-hover:text-zinc-600 transition-colors">
-                            Built with <span style={{ color: `${primaryColor}80` }}>ReviewLink AI</span>
+                    <Link to="/dashboard" className="inline-flex items-center gap-2 group opacity-60 hover:opacity-100 transition-opacity">
+                        <span className="text-[10px] font-black text-zinc-300 uppercase tracking-[0.2em]">
+                            Built with
                         </span>
-                        <ArrowRight size={10} className="text-zinc-300 group-hover:translate-x-1 transition-all" style={{ color: `${primaryColor}80` }} />
+                        <img src="/Vector.svg" alt="L" className="w-3 h-auto grayscale" />
+                        <img src="/Vector2.svg" alt="RevLinko" className="h-2.5 w-auto grayscale" />
                     </Link>
                 </div>
             </div>

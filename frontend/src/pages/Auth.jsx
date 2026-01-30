@@ -4,6 +4,7 @@ import { Lock, Rocket, Mail, Github, Loader2, Sparkles, User, Check, AlertCircle
 import { api } from '../api';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import RevLinkoLogo from '../components/ui/RevLinkoLogo';
 
 const Auth = ({ isLogin }) => {
     const navigate = useNavigate();
@@ -182,7 +183,14 @@ const Auth = ({ isLogin }) => {
             const data = await api.login(credentials);
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data));
-            navigate('/dashboard');
+
+            // Intelligent Redirect: Check if business exists
+            try {
+                await api.getMyBusiness();
+                navigate('/dashboard');
+            } catch (bizErr) {
+                navigate('/create-business');
+            }
         } catch (err) {
             setError(err.message || 'Login failed.');
         } finally {
@@ -221,7 +229,7 @@ const Auth = ({ isLogin }) => {
 
             {/* --- LEFT SIDE: Branding (Desktop Only) --- */}
             <div className={`relative hidden w-1/2 flex-col justify-between overflow-hidden lg:flex transition-all duration-700 ${step === 4 ? 'bg-emerald-600' : 'bg-primary-600'}`}
-                style={step !== 4 ? { background: 'linear-gradient(135deg, #2463eb 0%, #38bdf8 100%)' } : { background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)' }}>
+                style={step !== 4 ? { background: 'linear-gradient(135deg, #0A8DDB 0%, #38bdf8 100%)' } : { background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)' }}>
                 <div className="absolute inset-0 opacity-20 pointer-events-none">
                     <svg height="100%" width="100%">
                         <defs>
@@ -236,7 +244,7 @@ const Auth = ({ isLogin }) => {
                 <div className="z-10 px-10 py-8">
                     <Link to="/" className="flex items-center gap-2.5 text-white">
                         <div className="size-9 flex items-center justify-center rounded-lg bg-white text-primary-600 shadow-lg">
-                            <Sparkles size={20} fill="currentColor" />
+                            <RevLinkoLogo size={20} />
                         </div>
                         <h2 className="text-xl font-bold tracking-tight">RevLinko</h2>
                     </Link>
@@ -260,7 +268,7 @@ const Auth = ({ isLogin }) => {
             <div className="lg:hidden mb-8 lg:mb-0 transition-opacity">
                 <Link to="/" className="flex items-center gap-2 group">
                     <div className="size-12 flex items-center justify-center text-primary-600 border border-slate-100 group-hover:scale-105 transition-transform duration-300">
-                        <Sparkles size={28} fill="currentColor" />
+                        <RevLinkoLogo size={28} />
                     </div>
                     <span className="text-xl font-black tracking-tight text-slate-900">RevLinko</span>
                 </Link>
@@ -273,6 +281,20 @@ const Auth = ({ isLogin }) => {
                         <h2 className="text-2xl font-bold text-slate-900 tracking-tight mb-2">{title}</h2>
                         <p className="text-slate-500 text-sm font-medium">{sub}</p>
                     </div>
+
+                    {error && (
+                        <div className="mb-6 p-4 bg-red-50 text-red-600 text-sm font-bold rounded-2xl flex items-center gap-3 animate-pulse">
+                            <AlertCircle size={18} />
+                            {error}
+                        </div>
+                    )}
+
+                    {successMessage && (
+                        <div className="mb-6 p-4 bg-emerald-50 text-emerald-600 text-sm font-bold rounded-2xl flex items-center gap-3">
+                            <Check size={18} />
+                            {successMessage}
+                        </div>
+                    )}
 
                     {/* --- LOGIN FORM --- */}
                     {isLogin && (
@@ -413,12 +435,6 @@ const Auth = ({ isLogin }) => {
                                         setLoginMode(loginMode === 'otp' ? 'password' : 'otp');
                                         setOtpSent(false);
                                         setError('');
-                                        // If they choose password, we might need a different step or just show password field
-                                        // But the user said "signup via password" link. 
-                                        // Usually this would mean they set password first.
-                                        // For now, I'll just toggle the mode and stay on step 1 if it makes sense.
-                                        // Actually, if they are in 'password' mode on signup, 
-                                        // we should probably show the password field immediately.
                                     }}
                                     className="text-xs font-bold text-slate-400 hover:text-primary-600 transition-colors"
                                 >
@@ -467,7 +483,6 @@ const Auth = ({ isLogin }) => {
                     )}
 
                     {/* --- REGISTER STEP 3: Business Info --- */}
-                    {/* --- REGISTER STEP 3: Business Details & Services --- */}
                     {!isLogin && step === 3 && (
                         <div className="space-y-4">
                             <div className="flex justify-center mb-1">

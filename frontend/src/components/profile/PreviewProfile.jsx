@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Building2, Sparkles, Star, Globe, Instagram, Facebook, Twitter, MessageCircle, Mail, MapPin, Share2, Linkedin, Youtube, Phone } from 'lucide-react';
+import { Building2, Star, Globe, Instagram, Facebook, Twitter, MessageCircle, Mail, MapPin, Share2, Linkedin, Youtube, Phone } from 'lucide-react';
 import { ThemeProvider, useTheme } from '../../themes/ThemeProvider';
 import CardRenderer from './CardRenderer';
 import { Link } from 'react-router-dom';
@@ -75,7 +75,7 @@ const ProfileContent = ({ business, isPreview }) => {
                     className="w-10 h-10 bg-white/10 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/20 shadow-xl"
                     style={{ color: 'var(--accent-color)' }}
                 >
-                    <Sparkles size={20} fill="currentColor" />
+                    <img src="/Vector.svg" alt="L" className="w-5 h-auto" />
                 </div>
                 <button
                     onClick={sharePage}
@@ -115,7 +115,7 @@ const ProfileContent = ({ business, isPreview }) => {
                     <CardRenderer
                         label="Review us on Google"
                         url={`/${slug}/review`}
-                        icon={Star}
+                        icon={GoogleIcon}
                         primary={true}
                     />
 
@@ -153,9 +153,9 @@ const ProfileContent = ({ business, isPreview }) => {
                     </div>
                     <div className="flex items-center gap-2 text-[10px] font-black tracking-[0.2em] uppercase opacity-70" style={{ color: 'var(--btn-text)', fontFamily: 'var(--theme-font-title)' }}>
                         <span>Powered by</span>
-                        <div className="flex items-center gap-1" style={{ color: 'var(--accent-color)' }}>
-                            <Sparkles size={10} fill="currentColor" />
-                            <span>RevLinko</span>
+                        <div className="flex items-center gap-1.5 opacity-80">
+                            <img src="/Vector.svg" alt="L" className="w-3 h-auto" />
+                            <img src="/Vector2.svg" alt="RevLinko" className="h-2.5 w-auto grayscale brightness-50 contrast-200" style={{ filter: 'brightness(0) saturate(100%) invert(32%) sepia(9%) saturate(415%) hue-rotate(201deg) brightness(93%) contrast(85%)' }} />
                         </div>
                     </div>
                 </footer>

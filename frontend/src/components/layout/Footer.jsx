@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Twitter, Github } from 'lucide-react';
+import { Twitter, Github } from 'lucide-react';
 
 const Footer = () => {
     return (
@@ -9,8 +9,10 @@ const Footer = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
                     <div className="col-span-2 lg:col-span-2">
                         <div className="flex items-center gap-2 mb-6 text-primary-600">
-                            <Sparkles size={24} fill="currentColor" />
-                            <h2 className="text-xl font-black tracking-tight font-sans text-zinc-900">RevLinko</h2>
+                            <div className="size-8 flex items-center justify-center bg-primary-50 rounded-lg">
+                                <img src="/Vector.svg" alt="Logo" className="w-5 h-auto" />
+                            </div>
+                            <img src="/Vector2.svg" alt="RevLinko" className="h-5 w-auto" />
                         </div>
                         <p className="text-slate-500 text-sm max-w-xs leading-relaxed font-sans">
                             The world's most advanced AI-powered reputation management platform for local businesses and agencies.
