@@ -19,8 +19,9 @@ const generateAIReview = async (req, res) => {
 
         const aiReview = await generateReview(
             business.businessName,
-            business.businessDescription,
-            business.businessServices
+            business.businessDescription, // Keeping description if needed later, though not in new prompt explicit list, it's fine.
+            business.businessServices,
+            business.businessServices // Use services as keywords to ensure they are mentioned naturally
         );
 
         // const aiReview = "The ice creams here are absolutely delicious and taste so fresh! The staff is friendly and the place is super hygienic—highly recommend their mango ras.e price.";

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-export const BASE_URL = 'https://review-api-smoky.vercel.app/api';
-// const BASE_URL = 'http://localhost:5000/api';
+// export const BASE_URL = 'https://review-api-smoky.vercel.app/api';
+const BASE_URL = 'http://localhost:5000/api';
 // const BASE_URL = 'https://api.revlinko.com/api';
 
 export { BASE_URL };

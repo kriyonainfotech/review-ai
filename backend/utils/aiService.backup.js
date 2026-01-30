@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const generateReview = async (businessName, businessDescription, businessServices, location = "Surat, Gujarat, India", keywords = "App Development") => {
+const generateReview = async (businessName, businessDescription, businessServices) => {
     console.log(`AI Service called for: ${businessName}`);
     console.log(`Using OpenRouter API Key (first 5 chars): ${process.env.OPENROUTER_API_KEY?.substring(0, 5)}...`);
 
@@ -14,25 +14,13 @@ const generateReview = async (businessName, businessDescription, businessService
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "model": "liquid/lfm-2.5-1.2b-instruct:free",
-                "temperature": 1.2,
-                "top_p": 0.9,
+                "model": "xiaomi/mimo-v2-flash:free",
                 "messages": [
                     {
                         "role": "user",
-                        "content": `You are a happy customer of "${businessName}".
-                        Services: ${businessServices}.
-                        Location: ${location}.
-                        Keywords to include naturally: ${keywords}
-                        Write a very short, natural Google Review (max 1-2 sentences).
-                        IMPORTANT: Do NOT start with "I really loved", "I really enjoyed", or "I had a great".
-                        Vary your sentence structure. Start with the business name, the service quality, or a specific detail.
-                        Sound like a real person, not an AI. Be casual.`
+                        "content": `You are a happy and satisfied customer of a business called "${businessName}". The business is described as "${businessDescription}". They offer services like "${businessServices}". Write a very short, natural-sounding, and positive Google Review (max 1-2 sentences). Sound like a real person, avoid being overly formal or using too many emojis. Focus on the quality of service and overall experience. Provide ONLY the review text.`
                     }
-                ],
-                "provider": {
-                    "sort": "throughput"
-                }
+                ]
             })
         });
 
@@ -52,3 +40,4 @@ const generateReview = async (businessName, businessDescription, businessService
 };
 
 module.exports = { generateReview };
+
